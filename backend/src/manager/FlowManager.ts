@@ -170,7 +170,9 @@ export class FlowManager {
             throw new Error(`Task not found: ${taskId}`);
         }
 
-        const approval = await this.dbAdapt.getBizApprovalByProcInstId(task.PROC_INST_ID_);
+        const approval = (task as any).APPROVAL_ID_
+            ? await this.dbAdapt.getBizApproval((task as any).APPROVAL_ID_)
+            : await this.dbAdapt.getBizApprovalByProcInstId(task.PROC_INST_ID_);
         if (!approval) {
             throw new Error(`Approval not found`);
         }
@@ -240,7 +242,9 @@ export class FlowManager {
             throw new Error(`Task not found: ${taskId}`);
         }
 
-        const approval = await this.dbAdapt.getBizApprovalByProcInstId(task.PROC_INST_ID_);
+        const approval = (task as any).APPROVAL_ID_
+            ? await this.dbAdapt.getBizApproval((task as any).APPROVAL_ID_)
+            : await this.dbAdapt.getBizApprovalByProcInstId(task.PROC_INST_ID_);
         if (!approval) {
             throw new Error(`Approval not found`);
         }

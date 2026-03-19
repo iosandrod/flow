@@ -40,27 +40,48 @@ export class DbAdapt {
         this.sqlLogs = [];
     }
 
+    private inlineParam(sql: string, params: any[]): { sql: string, loggedParams: any[] } {
+        let paramIdx = 0;
+        const loggedParams: any[] = [];
+        const inlined = sql.replace(/@\d+/g, (match) => {
+            const val = params[paramIdx++];
+            loggedParams.push(val);
+            if (val === null || val === undefined) {
+                return 'NULL';
+            }
+            if (typeof val === 'number') {
+                return String(val);
+            }
+            if (typeof val === 'boolean') {
+                return val ? '1' : '0';
+            }
+            return `'${String(val).replace(/'/g, "''")}'`;
+        });
+        return { sql: inlined, loggedParams };
+    }
+
     private async _execute(sql: string, params: any[] = [], operation: string = 'EXEC'): Promise<any[]> {
         const start = Date.now();
+        const { sql: inlinedSql, loggedParams } = this.inlineParam(sql, params);
         try {
-            const result = await this.dataSource.query(sql, params);
+            const result = await this.dataSource.query(inlinedSql, []);
             const duration = Date.now() - start;
             if (this.enableLog) {
-                const entry: SqlLogEntry = { sql, params, duration };
+                const entry: SqlLogEntry = { sql: inlinedSql, params: loggedParams, duration };
                 this.sqlLogs.push(entry);
-                const paramStr = params.length > 0 ? `\n  PARAMS: ${JSON.stringify(params)}` : '';
-                const logSql = sql.replace(/\s+/g, ' ').trim();
+                const paramStr = loggedParams.length > 0 ? `\n  PARAMS: ${JSON.stringify(loggedParams)}` : '';
+                const logSql = inlinedSql.replace(/\s+/g, ' ').trim();
                 console.log(`[SQL] [${operation}] [${duration}ms] ${logSql}${paramStr}`);
             }
             return result;
         } catch (err: any) {
             const duration = Date.now() - start;
-            const entry: SqlLogEntry = { sql, params, duration, error: err.message };
+            const entry: SqlLogEntry = { sql: inlinedSql, params: loggedParams, duration, error: err.message };
             this.sqlLogs.push(entry);
             console.error(`[SQL] [${operation}] [${duration}ms] ERROR: ${err.message}`);
-            console.error(`[SQL] SQL: ${sql}`);
-            if (params.length > 0) {
-                console.error(`[SQL] PARAMS: ${JSON.stringify(params)}`);
+            console.error(`[SQL] SQL: ${inlinedSql}`);
+            if (loggedParams.length > 0) {
+                console.error(`[SQL] PARAMS: ${JSON.stringify(loggedParams)}`);
             }
             throw err;
         }
