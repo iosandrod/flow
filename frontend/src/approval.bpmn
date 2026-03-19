@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+  id="Definitions_Approval"
+  targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="approval-process" name="审批流程" isExecutable="true">
+
+    <!-- 开始 -->
+    <bpmn:startEvent id="StartEvent_1" name="开始">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <!-- 经理审批 -->
+    <bpmn:serviceTask id="ManagerTask" name="经理审批">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="manager-approval" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <!-- 金额判断 -->
+    <bpmn:exclusiveGateway id="Gateway_Amount" name="金额是否大于10000">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- 财务审批 -->
+    <bpmn:serviceTask id="FinanceTask" name="财务审批">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="finance-approval" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <!-- 结束 -->
+    <bpmn:endEvent id="EndEvent_1" name="结束">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- 连线 -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="ManagerTask" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="ManagerTask" targetRef="Gateway_Amount" />
+
+    <!-- 金额 <= 10000 -->
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Gateway_Amount" targetRef="EndEvent_1">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">
+        = amount &lt;= 10000
+      </bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <!-- 金额 > 10000 -->
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Gateway_Amount" targetRef="FinanceTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">
+        = amount &gt; 10000
+      </bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="FinanceTask" targetRef="EndEvent_1" />
+
+  </bpmn:process>
+
+</bpmn:definitions>

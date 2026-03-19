@@ -1,0 +1,1369 @@
+RESTART
+Database connection established
+Database columns checked/added
+Error converting columns (may already be nvarchar): QueryFailedError: Error: Invalid column name 'system_type_name'.
+    at D:\share18\flowable_new\backend\node_modules\typeorm\driver\sqlserver\SqlServerQueryRunner.js:204:30
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\base\request.js:443:25
+    at Request.userCallback (D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:492:15)
+    at Request.callback (D:\share18\flowable_new\backend\node_modules\tedious\lib\request.js:239:14)
+    at Parser.onEndOfMessage (D:\share18\flowable_new\backend\node_modules\tedious\lib\connection.js:2662:22)
+    at Object.onceWrapper (node:events:632:28)
+    at Parser.emit (node:events:518:28)
+    at Readable.<anonymous> (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\token-stream-parser.js:25:12)
+    at Readable.emit (node:events:518:28)
+    at endReadableNT (node:internal/streams/readable:1698:12) {
+  query: '\n' +
+    "                IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ACT_BIZ_APPROVAL') AND name = 'TITLE_' AND system_type_name NOT LIKE '%N%')\n" +
+    '                ALTER TABLE ACT_BIZ_APPROVAL ALTER COLUMN TITLE_ NVARCHAR(255);\n' +
+    '            ',
+  parameters: undefined,
+  driverError: RequestError: Invalid column name 'system_type_name'.
+      at handleError (D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (D:\share18\flowable_new\backend\node_modules\tedious\lib\connection.js:1013:18)
+      at RequestTokenHandler.onErrorMessage (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\handler.js:285:21)
+      at Readable.<anonymous> (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    code: 'EREQUEST',
+    originalError: Error: Invalid column name 'system_type_name'.
+        at handleError (D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+        at Connection.emit (node:events:518:28)
+        at Connection.emit (D:\share18\flowable_new\backend\node_modules\tedious\lib\connection.js:1013:18)
+        at RequestTokenHandler.onErrorMessage (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\handler.js:285:21)
+        at Readable.<anonymous> (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+        at Readable.emit (node:events:518:28)
+        at addChunk (node:internal/streams/readable:561:12)
+        at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+        at Readable.push (node:internal/streams/readable:393:5)
+        at nextAsync (node:internal/streams/from:194:22) {
+      info: [ErrorMessageToken]
+    },
+    number: 207,
+    lineNumber: 2,
+    state: 1,
+    class: 16,
+    serverName: '10_0_12_4',
+    procName: '',
+    precedingErrors: []
+  },
+  code: 'EREQUEST',
+  originalError: Error: Invalid column name 'system_type_name'.
+      at handleError (D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (D:\share18\flowable_new\backend\node_modules\tedious\lib\connection.js:1013:18)
+      at RequestTokenHandler.onErrorMessage (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\handler.js:285:21)
+      at Readable.<anonymous> (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 207,
+      state: 1,
+      class: 16,
+      message: "Invalid column name 'system_type_name'.",
+      serverName: '10_0_12_4',
+      procName: '',
+      lineNumber: 2
+    }
+  },
+  number: 207,
+  lineNumber: 2,
+  state: 1,
+  class: 16,
+  serverName: '10_0_12_4',
+  procName: '',
+  precedingErrors: []
+}
+Zeebe worker manager connected
+Table t_SdOrder created or already exists
+Server running on port 3000
+[Engine] Checking for existing process instance with businessKey: biz_clean_1773909708505
+[EngineRunner] Deploying BPMN, cleanXml length: 2985
+Deployed to Zeebe: {
+  deployments: [ { process: [Object], Metadata: 'process' } ],
+  key: '2251799813821767',
+  tenantId: ''
+}
+[startWorkflow] Found 3 task types: manager-approval, finance-approval, boss-approval
+manager-approval已经被监听
+[Worker] Created worker for task type: manager-approval
+finance-approval已经被监听
+[Worker] Created worker for task type: finance-approval
+boss-approval已经被监听
+[Worker] Created worker for task type: boss-approval
+[EngineRunner] createProcessInstance bpmnProcessId: approval-process
+[EngineRunner] cleanVariables: {"amount":5000,"applicant":"admin","_starterName":"管理员","businessKey":"biz_clean_1773909708505","starterId":1,"approvalId":"4a7b3752-1293-4981-a66a-27813c53a19f"}
+[Worker] Received job for manager-approval: 2251799813820201
+2251799813820201 2251799813820188
+[Worker] Job 2251799813820201 variables: {"amount":5000,"reason":"","assignee":"1","applicant":"徐菊芬","starterId":"41","approvalId":"44051606-7ee5-4032-b313-10ccc5146266","businessKey":"biz_1773680760132","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 44051606-7ee5-4032-b313-10ccc5146266
+[Worker] Received job for manager-approval: 2251799813820227
+2251799813820227 2251799813820214
+[Worker] Job 2251799813820227 variables: {"amount":5000,"reason":"","assignee":"1","applicant":"徐菊芬","starterId":"41","approvalId":"e58cc04a-649f-45bf-9395-462f400aacba","businessKey":"biz_1773681229521","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: e58cc04a-649f-45bf-9395-462f400aacba
+[Worker] Received job for manager-approval: 2251799813821502
+2251799813821502 2251799813821492
+[Worker] Job 2251799813821502 variables: {"amount":5000,"applicant":"admin","starterId":"1","approvalId":"test","businessKey":"test1"}
+[Worker] Looking for approvalId: test
+[Worker] Received job for manager-approval: 2251799813821530
+2251799813821530 2251799813821518
+[Worker] Job 2251799813821530 variables: {"amount":5000,"reason":"","applicant":"admin","starterId":"1","approvalId":"test-debug","businessKey":"biz_test_debug","_starterName":"管理员"}
+[Worker] Looking for approvalId: test-debug
+[Worker] Received job for manager-approval: 2251799813821545
+2251799813821545 2251799813821533
+[Worker] Job 2251799813821545 variables: {"amount":5000,"reason":"","applicant":"admin","starterId":"1","approvalId":"710f0109-e29d-4592-849d-86d6e7528ddb","businessKey":"biz_test_exact","_starterName":"管理员"}
+[Worker] Looking for approvalId: 710f0109-e29d-4592-849d-86d6e7528ddb
+[Worker] Received job for manager-approval: 2251799813821559
+2251799813821559 2251799813821547
+[Worker] Job 2251799813821559 variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"fe126247-6c4e-4935-bfdd-3f37742df9f3","businessKey":"biz_v5_001","_starterName":""}
+[Worker] Looking for approvalId: fe126247-6c4e-4935-bfdd-3f37742df9f3
+[Worker] Received job for manager-approval: 2251799813821591
+2251799813821591 2251799813821579
+[Worker] Job 2251799813821591 variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"cf19941c-52b4-489d-b775-dc876ca24dfb","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: cf19941c-52b4-489d-b775-dc876ca24dfb
+[Worker] Received job for manager-approval: 2251799813821612
+2251799813821612 2251799813821600
+[Worker] Job 2251799813821612 variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"39271578-79c1-4498-b1fa-a5f6c33e8136","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 39271578-79c1-4498-b1fa-a5f6c33e8136
+[Worker] Received job for manager-approval: 2251799813821640
+2251799813821640 2251799813821628
+[Worker] Job 2251799813821640 variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"54059876-8aba-407b-9161-c4b926d21499","businessKey":"biz_1773908957550","_starterName":"管理员"}
+[Worker] Looking for approvalId: 54059876-8aba-407b-9161-c4b926d21499
+[Worker] Received job for manager-approval: 2251799813821659
+2251799813821659 2251799813821647
+[Worker] Job 2251799813821659 variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"e92251c0-94a0-4dec-811f-10959b1f6cce","businessKey":"biz_1773909017586","_starterName":"管理员"}
+[Worker] Looking for approvalId: e92251c0-94a0-4dec-811f-10959b1f6cce
+[Worker] Received job for manager-approval: 2251799813821676
+2251799813821676 2251799813821664
+[Worker] Job 2251799813821676 variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"64792f75-24f6-462d-b443-ae93f9a1020c","businessKey":"biz_1773909017586","_starterName":"管理员"}
+[Worker] Looking for approvalId: 64792f75-24f6-462d-b443-ae93f9a1020c
+[Worker] Received job for manager-approval: 2251799813821692
+2251799813821692 2251799813821680
+[Worker] Job 2251799813821692 variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"c18894f9-5991-4d21-a6d2-f69877c400bf","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: c18894f9-5991-4d21-a6d2-f69877c400bf
+[Worker] Received job for manager-approval: 2251799813821714
+2251799813821714 2251799813821702
+[Worker] Job 2251799813821714 variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"376315ef-13b4-42f2-923e-ebaa053c45db","businessKey":"biz_1773909216943","_starterName":"管理员"}
+[Worker] Looking for approvalId: 376315ef-13b4-42f2-923e-ebaa053c45db
+[Worker] Received job for manager-approval: 2251799813821733
+2251799813821733 2251799813821721
+[Worker] Job 2251799813821733 variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"73e6b5d4-3909-440b-a8de-255e889d8731","businessKey":"biz_test_now","_starterName":""}
+[Worker] Looking for approvalId: 73e6b5d4-3909-440b-a8de-255e889d8731
+[Worker] Received job for manager-approval: 2251799813821779
+2251799813821779 2251799813821768
+[Worker] Job 2251799813821779 variables: {"amount":5000,"applicant":"admin","starterId":1,"approvalId":"4a7b3752-1293-4981-a66a-27813c53a19f","businessKey":"biz_clean_1773909708505","_starterName":"管理员"}
+[Worker] Looking for approvalId: 4a7b3752-1293-4981-a66a-27813c53a19f
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820201, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820227, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821502, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821530, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821545, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821559, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821591, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Received job for finance-approval: 2251799813819886
+2251799813819886 2251799813819862
+[Worker] Job 2251799813819886 variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] Received job for finance-approval: 2251799813819912
+2251799813819912 2251799813819890
+[Worker] Job 2251799813819912 variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] Received job for finance-approval: 2251799813819939
+2251799813819939 2251799813819917
+[Worker] Job 2251799813819939 variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] Received job for finance-approval: 2251799813820080
+2251799813820080 2251799813820056
+[Worker] Job 2251799813820080 variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821612, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821640, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821659, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821676, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821692, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821714, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821733, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: 4a7b3752-1293-4981-a66a-27813c53a19f
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819886, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819939, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819912, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820080, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Using taskHeaders user admin -> User_Id: 1
+[Worker] Created pending task f6a9ea06-6ec9-45be-a4d5-814bb504f5db for job 2251799813821779
+[Worker] Task f6a9ea06-6ec9-45be-a4d5-814bb504f5db created, waiting for frontend approval
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 1 tasks
+[Engine] Checking for existing process instance with businessKey: biz_final_test
+[EngineRunner] Deploying BPMN, cleanXml length: 2985
+Deployed to Zeebe: {
+  deployments: [ { process: [Object], Metadata: 'process' } ],
+  key: '2251799813821784',
+  tenantId: ''
+}
+[startWorkflow] Found 3 task types: manager-approval, finance-approval, boss-approval
+Worker for manager-approval already exists, skipping
+Worker for finance-approval already exists, skipping
+Worker for boss-approval already exists, skipping
+[EngineRunner] createProcessInstance bpmnProcessId: approval-process
+[EngineRunner] cleanVariables: {"amount":5000,"reason":"","applicant":"admin","_starterName":"","businessKey":"biz_final_test","starterId":1,"approvalId":"917c400f-1c6a-440d-98d5-29d91dc6c6f8"}
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 1 tasks
+[Worker] Received job for finance-approval: 2251799813819886
+2251799813819886 2251799813819862
+[Worker] Job 2251799813819886 variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] Received job for finance-approval: 2251799813819912
+2251799813819912 2251799813819890
+[Worker] Job 2251799813819912 variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] Received job for finance-approval: 2251799813819939
+2251799813819939 2251799813819917
+[Worker] Job 2251799813819939 variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] Received job for finance-approval: 2251799813820080
+2251799813820080 2251799813820056
+[Worker] Job 2251799813820080 variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819886, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819912, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819939, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820080, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Engine] Checking for existing process instance with businessKey: biz_1773909790708
+[EngineRunner] Deploying BPMN, cleanXml length: 2985
+Deployed to Zeebe: {
+  deployments: [ { process: [Object], Metadata: 'process' } ],
+  key: '2251799813821815',
+  tenantId: ''
+}
+[startWorkflow] Found 3 task types: manager-approval, finance-approval, boss-approval
+Worker for manager-approval already exists, skipping
+Worker for finance-approval already exists, skipping
+Worker for boss-approval already exists, skipping
+[EngineRunner] createProcessInstance bpmnProcessId: approval-process
+[EngineRunner] cleanVariables: {"amount":5000,"reason":"","applicant":"admin","_starterName":"管理员","businessKey":"biz_1773909790708","starterId":1,"approvalId":"62a6d2b4-795f-4742-a7af-5aa7938f88a5"}
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 0 tasks
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 0 tasks
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 0 tasks
+[Worker] Received job for finance-approval: 2251799813819886
+2251799813819886 2251799813819862
+[Worker] Job 2251799813819886 variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] Received job for finance-approval: 2251799813819912
+2251799813819912 2251799813819890
+[Worker] Job 2251799813819912 variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] Received job for finance-approval: 2251799813819939
+2251799813819939 2251799813819917
+[Worker] Job 2251799813819939 variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] Received job for finance-approval: 2251799813820080
+2251799813820080 2251799813820056
+[Worker] Job 2251799813820080 variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819886, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819912, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819939, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820080, skipping task creation
+[Worker] Task  created, waiting for frontend approval
+[Engine] Checking for existing process instance with businessKey: biz_1773909873206
+[EngineRunner] Deploying BPMN, cleanXml length: 2985
+Deployed to Zeebe: {
+  deployments: [ { process: [Object], Metadata: 'process' } ],
+  key: '2251799813821840',
+  tenantId: ''
+}
+[startWorkflow] Found 3 task types: manager-approval, finance-approval, boss-approval
+Worker for manager-approval already exists, skipping
+Worker for finance-approval already exists, skipping
+Worker for boss-approval already exists, skipping
+[EngineRunner] createProcessInstance bpmnProcessId: approval-process
+[EngineRunner] cleanVariables: {"amount":5000,"reason":"","applicant":"19828395638","_starterName":"徐菊芬","businessKey":"biz_1773909873206","starterId":41,"approvalId":"69b0cd10-8559-4caa-b0d2-4c2dc1e127bb"}
+[getUserTasks] userName: 19828395638
+[getUserTasks] Filtering by user: 19828395638
+[getUserTasks] Found 0 tasks
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 0 tasks
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 0 tasks
+RESTART2
+Database connection established
+Database columns checked/added
+Error converting columns (may already be nvarchar): QueryFailedError: Error: Invalid column name 'system_type_name'.
+    at D:\share18\flowable_new\backend\node_modules\typeorm\driver\sqlserver\SqlServerQueryRunner.js:204:30
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\base\request.js:443:25
+    at Request.userCallback (D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:492:15)
+    at Request.callback (D:\share18\flowable_new\backend\node_modules\tedious\lib\request.js:239:14)
+    at Parser.onEndOfMessage (D:\share18\flowable_new\backend\node_modules\tedious\lib\connection.js:2662:22)
+    at Object.onceWrapper (node:events:632:28)
+    at Parser.emit (node:events:518:28)
+    at Readable.<anonymous> (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\token-stream-parser.js:25:12)
+    at Readable.emit (node:events:518:28)
+    at endReadableNT (node:internal/streams/readable:1698:12) {
+  query: '\n' +
+    "                IF EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ACT_BIZ_APPROVAL') AND name = 'TITLE_' AND system_type_name NOT LIKE '%N%')\n" +
+    '                ALTER TABLE ACT_BIZ_APPROVAL ALTER COLUMN TITLE_ NVARCHAR(255);\n' +
+    '            ',
+  parameters: undefined,
+  driverError: RequestError: Invalid column name 'system_type_name'.
+      at handleError (D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (D:\share18\flowable_new\backend\node_modules\tedious\lib\connection.js:1013:18)
+      at RequestTokenHandler.onErrorMessage (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\handler.js:285:21)
+      at Readable.<anonymous> (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    code: 'EREQUEST',
+    originalError: Error: Invalid column name 'system_type_name'.
+        at handleError (D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+        at Connection.emit (node:events:518:28)
+        at Connection.emit (D:\share18\flowable_new\backend\node_modules\tedious\lib\connection.js:1013:18)
+        at RequestTokenHandler.onErrorMessage (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\handler.js:285:21)
+        at Readable.<anonymous> (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+        at Readable.emit (node:events:518:28)
+        at addChunk (node:internal/streams/readable:561:12)
+        at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+        at Readable.push (node:internal/streams/readable:393:5)
+        at nextAsync (node:internal/streams/from:194:22) {
+      info: [ErrorMessageToken]
+    },
+    number: 207,
+    lineNumber: 2,
+    state: 1,
+    class: 16,
+    serverName: '10_0_12_4',
+    procName: '',
+    precedingErrors: []
+  },
+  code: 'EREQUEST',
+  originalError: Error: Invalid column name 'system_type_name'.
+      at handleError (D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (D:\share18\flowable_new\backend\node_modules\tedious\lib\connection.js:1013:18)
+      at RequestTokenHandler.onErrorMessage (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\handler.js:285:21)
+      at Readable.<anonymous> (D:\share18\flowable_new\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 207,
+      state: 1,
+      class: 16,
+      message: "Invalid column name 'system_type_name'.",
+      serverName: '10_0_12_4',
+      procName: '',
+      lineNumber: 2
+    }
+  },
+  number: 207,
+  lineNumber: 2,
+  state: 1,
+  class: 16,
+  serverName: '10_0_12_4',
+  procName: '',
+  precedingErrors: []
+}
+Zeebe worker manager connected
+Table t_SdOrder created or already exists
+Server running on port 3000
+[Engine] Checking for existing process instance with businessKey: biz_debug2_1773910885
+[EngineRunner] Deploying BPMN, cleanXml length: 2985
+Deployed to Zeebe: {
+  deployments: [ { process: [Object], Metadata: 'process' } ],
+  key: '2251799813821934',
+  tenantId: ''
+}
+[startWorkflow] Found 3 task types: manager-approval, finance-approval, boss-approval
+manager-approval已经被监听
+[Worker] Created worker for task type: manager-approval
+finance-approval已经被监听
+[Worker] Created worker for task type: finance-approval
+boss-approval已经被监听
+[Worker] Created worker for task type: boss-approval
+[EngineRunner] createProcessInstance bpmnProcessId: approval-process
+[EngineRunner] cleanVariables: {"amount":5000,"applicant":"admin","_starterName":"","businessKey":"biz_debug2_1773910885","starterId":1,"approvalId":"dd3032f3-5ea5-43ef-b5fc-88294397b97c"}
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813820201, processInstanceKey=2251799813820188, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813820201, processInstanceKey=2251799813820188, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"徐菊芬","starterId":"41","approvalId":"44051606-7ee5-4032-b313-10ccc5146266","businessKey":"biz_1773680760132","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 44051606-7ee5-4032-b313-10ccc5146266
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813820227, processInstanceKey=2251799813820214, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813820227, processInstanceKey=2251799813820214, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"徐菊芬","starterId":"41","approvalId":"e58cc04a-649f-45bf-9395-462f400aacba","businessKey":"biz_1773681229521","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: e58cc04a-649f-45bf-9395-462f400aacba
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821502, processInstanceKey=2251799813821492, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821502, processInstanceKey=2251799813821492, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":"1","approvalId":"test","businessKey":"test1"}
+[Worker] Looking for approvalId: test
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821530, processInstanceKey=2251799813821518, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821530, processInstanceKey=2251799813821518, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":"1","approvalId":"test-debug","businessKey":"biz_test_debug","_starterName":"管理员"}
+[Worker] Looking for approvalId: test-debug
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821545, processInstanceKey=2251799813821533, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821545, processInstanceKey=2251799813821533, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":"1","approvalId":"710f0109-e29d-4592-849d-86d6e7528ddb","businessKey":"biz_test_exact","_starterName":"管理员"}
+[Worker] Looking for approvalId: 710f0109-e29d-4592-849d-86d6e7528ddb
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821559, processInstanceKey=2251799813821547, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821559, processInstanceKey=2251799813821547, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"fe126247-6c4e-4935-bfdd-3f37742df9f3","businessKey":"biz_v5_001","_starterName":""}
+[Worker] Looking for approvalId: fe126247-6c4e-4935-bfdd-3f37742df9f3
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821591, processInstanceKey=2251799813821579, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821591, processInstanceKey=2251799813821579, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"cf19941c-52b4-489d-b775-dc876ca24dfb","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: cf19941c-52b4-489d-b775-dc876ca24dfb
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821612, processInstanceKey=2251799813821600, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821612, processInstanceKey=2251799813821600, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"39271578-79c1-4498-b1fa-a5f6c33e8136","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 39271578-79c1-4498-b1fa-a5f6c33e8136
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821640, processInstanceKey=2251799813821628, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821640, processInstanceKey=2251799813821628, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"54059876-8aba-407b-9161-c4b926d21499","businessKey":"biz_1773908957550","_starterName":"管理员"}
+[Worker] Looking for approvalId: 54059876-8aba-407b-9161-c4b926d21499
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821659, processInstanceKey=2251799813821647, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821659, processInstanceKey=2251799813821647, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"e92251c0-94a0-4dec-811f-10959b1f6cce","businessKey":"biz_1773909017586","_starterName":"管理员"}
+[Worker] Looking for approvalId: e92251c0-94a0-4dec-811f-10959b1f6cce
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821676, processInstanceKey=2251799813821664, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821676, processInstanceKey=2251799813821664, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"64792f75-24f6-462d-b443-ae93f9a1020c","businessKey":"biz_1773909017586","_starterName":"管理员"}
+[Worker] Looking for approvalId: 64792f75-24f6-462d-b443-ae93f9a1020c
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821692, processInstanceKey=2251799813821680, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821692, processInstanceKey=2251799813821680, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"c18894f9-5991-4d21-a6d2-f69877c400bf","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: c18894f9-5991-4d21-a6d2-f69877c400bf
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821714, processInstanceKey=2251799813821702, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821714, processInstanceKey=2251799813821702, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"376315ef-13b4-42f2-923e-ebaa053c45db","businessKey":"biz_1773909216943","_starterName":"管理员"}
+[Worker] Looking for approvalId: 376315ef-13b4-42f2-923e-ebaa053c45db
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821733, processInstanceKey=2251799813821721, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821733, processInstanceKey=2251799813821721, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"73e6b5d4-3909-440b-a8de-255e889d8731","businessKey":"biz_test_now","_starterName":""}
+[Worker] Looking for approvalId: 73e6b5d4-3909-440b-a8de-255e889d8731
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821779, processInstanceKey=2251799813821768, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821779, processInstanceKey=2251799813821768, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":1,"approvalId":"4a7b3752-1293-4981-a66a-27813c53a19f","businessKey":"biz_clean_1773909708505","_starterName":"管理员"}
+[Worker] Looking for approvalId: 4a7b3752-1293-4981-a66a-27813c53a19f
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821797, processInstanceKey=2251799813821785, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821797, processInstanceKey=2251799813821785, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"917c400f-1c6a-440d-98d5-29d91dc6c6f8","businessKey":"biz_final_test","_starterName":""}
+[Worker] Looking for approvalId: 917c400f-1c6a-440d-98d5-29d91dc6c6f8
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821828, processInstanceKey=2251799813821816, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821828, processInstanceKey=2251799813821816, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"62a6d2b4-795f-4742-a7af-5aa7938f88a5","businessKey":"biz_1773909790708","_starterName":"管理员"}
+[Worker] Looking for approvalId: 62a6d2b4-795f-4742-a7af-5aa7938f88a5
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821853, processInstanceKey=2251799813821841, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821853, processInstanceKey=2251799813821841, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"69b0cd10-8559-4caa-b0d2-4c2dc1e127bb","businessKey":"biz_1773909873206","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 69b0cd10-8559-4caa-b0d2-4c2dc1e127bb
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821946, processInstanceKey=2251799813821935, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821946, processInstanceKey=2251799813821935, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":1,"approvalId":"dd3032f3-5ea5-43ef-b5fc-88294397b97c","businessKey":"biz_debug2_1773910885","_starterName":""}
+[Worker] Looking for approvalId: dd3032f3-5ea5-43ef-b5fc-88294397b97c
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819886, processInstanceKey=2251799813819862, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819886, processInstanceKey=2251799813819862, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819912, processInstanceKey=2251799813819890, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819912, processInstanceKey=2251799813819890, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819939, processInstanceKey=2251799813819917, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819939, processInstanceKey=2251799813819917, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813820080, processInstanceKey=2251799813820056, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813820080, processInstanceKey=2251799813820056, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820201, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820227, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821502, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821530, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821545, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821591, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821559, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821640, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821612, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821659, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821676, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821692, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821714, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821733, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821797, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821779, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: 62a6d2b4-795f-4742-a7af-5aa7938f88a5
+[Worker] Found approval: 69b0cd10-8559-4caa-b0d2-4c2dc1e127bb
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819886, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: dd3032f3-5ea5-43ef-b5fc-88294397b97c
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819912, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819939, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820080, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Using taskHeaders user admin -> User_Id: 1
+[Worker] Using taskHeaders user admin -> User_Id: 1
+[Worker] Using taskHeaders user admin -> User_Id: 1
+[Worker] Created pending task 9f94e86f-2eef-4555-939f-2929ae3a48b5 for job 2251799813821946
+[Worker] ====== HANDLER COMPLETE ====== taskId=9f94e86f-2eef-4555-939f-2929ae3a48b5
+[Worker] Created pending task c234556e-a4f2-4433-8c4c-091c25d946ca for job 2251799813821853
+[Worker] ====== HANDLER COMPLETE ====== taskId=c234556e-a4f2-4433-8c4c-091c25d946ca
+[Worker] Created pending task 1651ef19-1f5f-440c-95c3-1f0a8aff66ab for job 2251799813821828
+[Worker] ====== HANDLER COMPLETE ====== taskId=1651ef19-1f5f-440c-95c3-1f0a8aff66ab
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819886, processInstanceKey=2251799813819862, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819886, processInstanceKey=2251799813819862, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819912, processInstanceKey=2251799813819890, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819912, processInstanceKey=2251799813819890, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819939, processInstanceKey=2251799813819917, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819939, processInstanceKey=2251799813819917, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813820080, processInstanceKey=2251799813820056, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813820080, processInstanceKey=2251799813820056, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] HANDLER ERROR: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence) QueryFailedError: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence)
+    at D:\share18\flowable_new\backend\node_modules\typeorm\driver\sqlserver\SqlServerQueryRunner.js:204:30
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\base\request.js:443:25
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:420:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[Worker] HANDLER ERROR: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence) QueryFailedError: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence)
+    at D:\share18\flowable_new\backend\node_modules\typeorm\driver\sqlserver\SqlServerQueryRunner.js:204:30
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\base\request.js:443:25
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:420:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[Worker] HANDLER ERROR: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence) QueryFailedError: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence)
+    at D:\share18\flowable_new\backend\node_modules\typeorm\driver\sqlserver\SqlServerQueryRunner.js:204:30
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\base\request.js:443:25
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:420:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[Worker] HANDLER ERROR: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence) QueryFailedError: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence)
+    at D:\share18\flowable_new\backend\node_modules\typeorm\driver\sqlserver\SqlServerQueryRunner.js:204:30
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\base\request.js:443:25
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:420:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819886, processInstanceKey=2251799813819862, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819886, processInstanceKey=2251799813819862, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819912, processInstanceKey=2251799813819890, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819912, processInstanceKey=2251799813819890, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819939, processInstanceKey=2251799813819917, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819939, processInstanceKey=2251799813819917, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813820080, processInstanceKey=2251799813820056, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813820080, processInstanceKey=2251799813820056, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] HANDLER ERROR: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence) QueryFailedError: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence)
+    at D:\share18\flowable_new\backend\node_modules\typeorm\driver\sqlserver\SqlServerQueryRunner.js:204:30
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\base\request.js:443:25
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:420:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[Worker] HANDLER ERROR: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence) QueryFailedError: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence)
+    at D:\share18\flowable_new\backend\node_modules\typeorm\driver\sqlserver\SqlServerQueryRunner.js:204:30
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\base\request.js:443:25
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:420:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[Worker] HANDLER ERROR: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence) QueryFailedError: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence)
+    at D:\share18\flowable_new\backend\node_modules\typeorm\driver\sqlserver\SqlServerQueryRunner.js:204:30
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\base\request.js:443:25
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:420:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[Worker] HANDLER ERROR: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence) QueryFailedError: ConnectionError: Failed to connect to 114.132.77.46:1433 - Could not connect (sequence)
+    at D:\share18\flowable_new\backend\node_modules\typeorm\driver\sqlserver\SqlServerQueryRunner.js:204:30
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\base\request.js:443:25
+    at D:\share18\flowable_new\backend\node_modules\mssql\lib\tedious\request.js:420:25
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Database connection established
+Database columns checked/added
+[DB] Converted ACT_BIZ_APPROVAL.TITLE_ to NVARCHAR(255)
+[DB] Converted ACT_BIZ_APPROVAL.APPLICANT_ to NVARCHAR(64)
+[DB] Converted ACT_BIZ_APPROVAL.APPLICANT_NAME_ to NVARCHAR(128)
+[DB] Converted ACT_BIZ_APPROVAL.BUSINESS_TYPE_ to NVARCHAR(64)
+[DB] Converted ACT_BIZ_APPROVAL.DESCRIPTION_ to NVARCHAR(1000)
+[DB] Converted ACT_BIZ_APPROVAL.STATUS_ to NVARCHAR(32)
+[DB] Converted ACT_BIZ_APPROVAL.PROC_INST_ID_ to NVARCHAR(64)
+[DB] Converted ACT_BIZ_APPROVAL.CURRENT_NODE_ to NVARCHAR(128)
+[DB] Converted ACT_BIZ_APPROVAL.CURRENT_ASSIGNEE_ to NVARCHAR(64)
+Database columns converted to nvarchar for Unicode support
+Zeebe worker manager connected
+Table t_SdOrder created or already exists
+Server running on port 3000
+[Engine] Checking for existing process instance with businessKey: biz_fixed2_1773911594
+[EngineRunner] Deploying BPMN, cleanXml length: 2985
+Deployed to Zeebe: {
+  deployments: [ { process: [Object], Metadata: 'process' } ],
+  key: '2251799813822022',
+  tenantId: ''
+}
+[startWorkflow] Found 3 task types: manager-approval, finance-approval, boss-approval
+manager-approval已经被监听
+[Worker] Created worker for task type: manager-approval
+finance-approval已经被监听
+[Worker] Created worker for task type: finance-approval
+boss-approval已经被监听
+[Worker] Created worker for task type: boss-approval
+[EngineRunner] createProcessInstance bpmnProcessId: approval-process
+[EngineRunner] cleanVariables: {"amount":5000,"applicant":"admin","_starterName":"","businessKey":"biz_fixed2_1773911594","starterId":1,"approvalId":"069a42e8-2732-4963-a899-e6a9d0e9610f"}
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813820201, processInstanceKey=2251799813820188, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813820201, processInstanceKey=2251799813820188, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"徐菊芬","starterId":"41","approvalId":"44051606-7ee5-4032-b313-10ccc5146266","businessKey":"biz_1773680760132","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 44051606-7ee5-4032-b313-10ccc5146266
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813820227, processInstanceKey=2251799813820214, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813820227, processInstanceKey=2251799813820214, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"徐菊芬","starterId":"41","approvalId":"e58cc04a-649f-45bf-9395-462f400aacba","businessKey":"biz_1773681229521","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: e58cc04a-649f-45bf-9395-462f400aacba
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821502, processInstanceKey=2251799813821492, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821502, processInstanceKey=2251799813821492, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":"1","approvalId":"test","businessKey":"test1"}
+[Worker] Looking for approvalId: test
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821530, processInstanceKey=2251799813821518, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821530, processInstanceKey=2251799813821518, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":"1","approvalId":"test-debug","businessKey":"biz_test_debug","_starterName":"管理员"}
+[Worker] Looking for approvalId: test-debug
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821545, processInstanceKey=2251799813821533, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821545, processInstanceKey=2251799813821533, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":"1","approvalId":"710f0109-e29d-4592-849d-86d6e7528ddb","businessKey":"biz_test_exact","_starterName":"管理员"}
+[Worker] Looking for approvalId: 710f0109-e29d-4592-849d-86d6e7528ddb
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821559, processInstanceKey=2251799813821547, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821559, processInstanceKey=2251799813821547, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"fe126247-6c4e-4935-bfdd-3f37742df9f3","businessKey":"biz_v5_001","_starterName":""}
+[Worker] Looking for approvalId: fe126247-6c4e-4935-bfdd-3f37742df9f3
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821591, processInstanceKey=2251799813821579, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821591, processInstanceKey=2251799813821579, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"cf19941c-52b4-489d-b775-dc876ca24dfb","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: cf19941c-52b4-489d-b775-dc876ca24dfb
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821612, processInstanceKey=2251799813821600, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821612, processInstanceKey=2251799813821600, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"39271578-79c1-4498-b1fa-a5f6c33e8136","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 39271578-79c1-4498-b1fa-a5f6c33e8136
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821640, processInstanceKey=2251799813821628, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821640, processInstanceKey=2251799813821628, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"54059876-8aba-407b-9161-c4b926d21499","businessKey":"biz_1773908957550","_starterName":"管理员"}
+[Worker] Looking for approvalId: 54059876-8aba-407b-9161-c4b926d21499
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821659, processInstanceKey=2251799813821647, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821659, processInstanceKey=2251799813821647, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"e92251c0-94a0-4dec-811f-10959b1f6cce","businessKey":"biz_1773909017586","_starterName":"管理员"}
+[Worker] Looking for approvalId: e92251c0-94a0-4dec-811f-10959b1f6cce
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821676, processInstanceKey=2251799813821664, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821676, processInstanceKey=2251799813821664, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"64792f75-24f6-462d-b443-ae93f9a1020c","businessKey":"biz_1773909017586","_starterName":"管理员"}
+[Worker] Looking for approvalId: 64792f75-24f6-462d-b443-ae93f9a1020c
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821692, processInstanceKey=2251799813821680, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821692, processInstanceKey=2251799813821680, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"c18894f9-5991-4d21-a6d2-f69877c400bf","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: c18894f9-5991-4d21-a6d2-f69877c400bf
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821714, processInstanceKey=2251799813821702, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821714, processInstanceKey=2251799813821702, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"376315ef-13b4-42f2-923e-ebaa053c45db","businessKey":"biz_1773909216943","_starterName":"管理员"}
+[Worker] Looking for approvalId: 376315ef-13b4-42f2-923e-ebaa053c45db
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821733, processInstanceKey=2251799813821721, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821733, processInstanceKey=2251799813821721, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"73e6b5d4-3909-440b-a8de-255e889d8731","businessKey":"biz_test_now","_starterName":""}
+[Worker] Looking for approvalId: 73e6b5d4-3909-440b-a8de-255e889d8731
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821779, processInstanceKey=2251799813821768, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821779, processInstanceKey=2251799813821768, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":1,"approvalId":"4a7b3752-1293-4981-a66a-27813c53a19f","businessKey":"biz_clean_1773909708505","_starterName":"管理员"}
+[Worker] Looking for approvalId: 4a7b3752-1293-4981-a66a-27813c53a19f
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821797, processInstanceKey=2251799813821785, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821797, processInstanceKey=2251799813821785, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"917c400f-1c6a-440d-98d5-29d91dc6c6f8","businessKey":"biz_final_test","_starterName":""}
+[Worker] Looking for approvalId: 917c400f-1c6a-440d-98d5-29d91dc6c6f8
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821828, processInstanceKey=2251799813821816, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821828, processInstanceKey=2251799813821816, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"62a6d2b4-795f-4742-a7af-5aa7938f88a5","businessKey":"biz_1773909790708","_starterName":"管理员"}
+[Worker] Looking for approvalId: 62a6d2b4-795f-4742-a7af-5aa7938f88a5
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821853, processInstanceKey=2251799813821841, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821853, processInstanceKey=2251799813821841, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"69b0cd10-8559-4caa-b0d2-4c2dc1e127bb","businessKey":"biz_1773909873206","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 69b0cd10-8559-4caa-b0d2-4c2dc1e127bb
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821946, processInstanceKey=2251799813821935, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821946, processInstanceKey=2251799813821935, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":1,"approvalId":"dd3032f3-5ea5-43ef-b5fc-88294397b97c","businessKey":"biz_debug2_1773910885","_starterName":""}
+[Worker] Looking for approvalId: dd3032f3-5ea5-43ef-b5fc-88294397b97c
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813822034, processInstanceKey=2251799813822023, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813822034, processInstanceKey=2251799813822023, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":1,"approvalId":"069a42e8-2732-4963-a899-e6a9d0e9610f","businessKey":"biz_fixed2_1773911594","_starterName":""}
+[Worker] Looking for approvalId: 069a42e8-2732-4963-a899-e6a9d0e9610f
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819886, processInstanceKey=2251799813819862, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819886, processInstanceKey=2251799813819862, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819912, processInstanceKey=2251799813819890, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819912, processInstanceKey=2251799813819890, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819939, processInstanceKey=2251799813819917, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819939, processInstanceKey=2251799813819917, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813820080, processInstanceKey=2251799813820056, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813820080, processInstanceKey=2251799813820056, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820201, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820227, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821502, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821530, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821545, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821559, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821591, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821612, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821640, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821659, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821676, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821692, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821714, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821733, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821779, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821797, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: 62a6d2b4-795f-4742-a7af-5aa7938f88a5
+[Worker] Found approval: 69b0cd10-8559-4caa-b0d2-4c2dc1e127bb
+[Worker] Found approval: dd3032f3-5ea5-43ef-b5fc-88294397b97c
+[Worker] Found approval: 069a42e8-2732-4963-a899-e6a9d0e9610f
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819886, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819912, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819939, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820080, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Task already exists for job 2251799813821828, skipping
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Task already exists for job 2251799813821853, skipping
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Task already exists for job 2251799813821946, skipping
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Using taskHeaders user admin -> User_Id: 1
+[Worker] Created pending task 4da2ea00-f060-4bfe-b884-888bfbc910d9 for job 2251799813822034
+[Worker] ====== HANDLER COMPLETE ====== taskId=4da2ea00-f060-4bfe-b884-888bfbc910d9
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819886, processInstanceKey=2251799813819862, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819886, processInstanceKey=2251799813819862, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819912, processInstanceKey=2251799813819890, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819912, processInstanceKey=2251799813819890, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819939, processInstanceKey=2251799813819917, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819939, processInstanceKey=2251799813819917, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813820080, processInstanceKey=2251799813820056, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813820080, processInstanceKey=2251799813820056, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819886, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819912, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819939, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820080, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819886, processInstanceKey=2251799813819862, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819886, processInstanceKey=2251799813819862, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819912, processInstanceKey=2251799813819890, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819912, processInstanceKey=2251799813819890, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819939, processInstanceKey=2251799813819917, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819939, processInstanceKey=2251799813819917, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813820080, processInstanceKey=2251799813820056, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813820080, processInstanceKey=2251799813820056, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819886, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819912, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819939, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820080, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Engine] Checking for existing process instance with businessKey: biz_1773913252309
+[EngineRunner] Deploying BPMN, cleanXml length: 2985
+Deployed to Zeebe: {
+  deployments: [ { process: [Object], Metadata: 'process' } ],
+  key: '2251799813822196',
+  tenantId: ''
+}
+[startWorkflow] Found 3 task types: manager-approval, finance-approval, boss-approval
+Worker for manager-approval already exists, skipping
+Worker for finance-approval already exists, skipping
+Worker for boss-approval already exists, skipping
+[EngineRunner] createProcessInstance bpmnProcessId: approval-process
+[EngineRunner] cleanVariables: {"amount":5000,"reason":"","applicant":"admin","_starterName":"管理员","businessKey":"biz_1773913252309","starterId":1,"approvalId":"385ce6a8-75dc-4225-ac86-b86aabe0ef4a"}
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 0 tasks
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 0 tasks
+Database connection established
+Database columns checked/added
+[DB] Converted ACT_BIZ_APPROVAL.TITLE_ to NVARCHAR(255)
+[DB] Converted ACT_BIZ_APPROVAL.APPLICANT_ to NVARCHAR(64)
+[DB] Converted ACT_BIZ_APPROVAL.APPLICANT_NAME_ to NVARCHAR(128)
+[DB] Converted ACT_BIZ_APPROVAL.BUSINESS_TYPE_ to NVARCHAR(64)
+[DB] Converted ACT_BIZ_APPROVAL.DESCRIPTION_ to NVARCHAR(1000)
+[DB] Converted ACT_BIZ_APPROVAL.STATUS_ to NVARCHAR(32)
+[DB] Converted ACT_BIZ_APPROVAL.PROC_INST_ID_ to NVARCHAR(64)
+[DB] Converted ACT_BIZ_APPROVAL.CURRENT_NODE_ to NVARCHAR(128)
+[DB] Converted ACT_BIZ_APPROVAL.CURRENT_ASSIGNEE_ to NVARCHAR(64)
+Database columns converted to nvarchar for Unicode support
+Zeebe worker manager connected
+Table t_SdOrder created or already exists
+Server running on port 3000
+[Engine] Checking for existing process instance with businessKey: biz_clean_test_1773913369892
+[EngineRunner] Deploying BPMN, cleanXml length: 2985
+Deployed to Zeebe: {
+  deployments: [ { process: [Object], Metadata: 'process' } ],
+  key: '2251799813822218',
+  tenantId: ''
+}
+[startWorkflow] Found 3 task types: manager-approval, finance-approval, boss-approval
+manager-approval已经被监听
+[Worker] Created worker for task type: manager-approval
+finance-approval已经被监听
+[Worker] Created worker for task type: finance-approval
+boss-approval已经被监听
+[Worker] Created worker for task type: boss-approval
+[EngineRunner] createProcessInstance bpmnProcessId: approval-process
+[EngineRunner] cleanVariables: {"amount":5000,"applicant":"admin","_starterName":"管理员","businessKey":"biz_clean_test_1773913369892","starterId":1,"approvalId":"f0c381a5-37e0-4dac-ae49-7aa3a772050c"}
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813820201, processInstanceKey=2251799813820188, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813820201, processInstanceKey=2251799813820188, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"徐菊芬","starterId":"41","approvalId":"44051606-7ee5-4032-b313-10ccc5146266","businessKey":"biz_1773680760132","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 44051606-7ee5-4032-b313-10ccc5146266
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813820227, processInstanceKey=2251799813820214, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813820227, processInstanceKey=2251799813820214, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"徐菊芬","starterId":"41","approvalId":"e58cc04a-649f-45bf-9395-462f400aacba","businessKey":"biz_1773681229521","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: e58cc04a-649f-45bf-9395-462f400aacba
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821502, processInstanceKey=2251799813821492, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821502, processInstanceKey=2251799813821492, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":"1","approvalId":"test","businessKey":"test1"}
+[Worker] Looking for approvalId: test
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821530, processInstanceKey=2251799813821518, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821530, processInstanceKey=2251799813821518, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":"1","approvalId":"test-debug","businessKey":"biz_test_debug","_starterName":"管理员"}
+[Worker] Looking for approvalId: test-debug
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821545, processInstanceKey=2251799813821533, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821545, processInstanceKey=2251799813821533, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":"1","approvalId":"710f0109-e29d-4592-849d-86d6e7528ddb","businessKey":"biz_test_exact","_starterName":"管理员"}
+[Worker] Looking for approvalId: 710f0109-e29d-4592-849d-86d6e7528ddb
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821559, processInstanceKey=2251799813821547, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821559, processInstanceKey=2251799813821547, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"fe126247-6c4e-4935-bfdd-3f37742df9f3","businessKey":"biz_v5_001","_starterName":""}
+[Worker] Looking for approvalId: fe126247-6c4e-4935-bfdd-3f37742df9f3
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821591, processInstanceKey=2251799813821579, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821591, processInstanceKey=2251799813821579, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"cf19941c-52b4-489d-b775-dc876ca24dfb","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: cf19941c-52b4-489d-b775-dc876ca24dfb
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821612, processInstanceKey=2251799813821600, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821612, processInstanceKey=2251799813821600, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"39271578-79c1-4498-b1fa-a5f6c33e8136","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 39271578-79c1-4498-b1fa-a5f6c33e8136
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821640, processInstanceKey=2251799813821628, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821640, processInstanceKey=2251799813821628, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"54059876-8aba-407b-9161-c4b926d21499","businessKey":"biz_1773908957550","_starterName":"管理员"}
+[Worker] Looking for approvalId: 54059876-8aba-407b-9161-c4b926d21499
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821659, processInstanceKey=2251799813821647, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821659, processInstanceKey=2251799813821647, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"e92251c0-94a0-4dec-811f-10959b1f6cce","businessKey":"biz_1773909017586","_starterName":"管理员"}
+[Worker] Looking for approvalId: e92251c0-94a0-4dec-811f-10959b1f6cce
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821676, processInstanceKey=2251799813821664, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821676, processInstanceKey=2251799813821664, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"64792f75-24f6-462d-b443-ae93f9a1020c","businessKey":"biz_1773909017586","_starterName":"管理员"}
+[Worker] Looking for approvalId: 64792f75-24f6-462d-b443-ae93f9a1020c
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821692, processInstanceKey=2251799813821680, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821692, processInstanceKey=2251799813821680, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"c18894f9-5991-4d21-a6d2-f69877c400bf","businessKey":"biz_1773849014383","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: c18894f9-5991-4d21-a6d2-f69877c400bf
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821714, processInstanceKey=2251799813821702, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821714, processInstanceKey=2251799813821702, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"376315ef-13b4-42f2-923e-ebaa053c45db","businessKey":"biz_1773909216943","_starterName":"管理员"}
+[Worker] Looking for approvalId: 376315ef-13b4-42f2-923e-ebaa053c45db
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821733, processInstanceKey=2251799813821721, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821733, processInstanceKey=2251799813821721, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"73e6b5d4-3909-440b-a8de-255e889d8731","businessKey":"biz_test_now","_starterName":""}
+[Worker] Looking for approvalId: 73e6b5d4-3909-440b-a8de-255e889d8731
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821779, processInstanceKey=2251799813821768, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821779, processInstanceKey=2251799813821768, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":1,"approvalId":"4a7b3752-1293-4981-a66a-27813c53a19f","businessKey":"biz_clean_1773909708505","_starterName":"管理员"}
+[Worker] Looking for approvalId: 4a7b3752-1293-4981-a66a-27813c53a19f
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821797, processInstanceKey=2251799813821785, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821797, processInstanceKey=2251799813821785, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"917c400f-1c6a-440d-98d5-29d91dc6c6f8","businessKey":"biz_final_test","_starterName":""}
+[Worker] Looking for approvalId: 917c400f-1c6a-440d-98d5-29d91dc6c6f8
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821828, processInstanceKey=2251799813821816, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821828, processInstanceKey=2251799813821816, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"62a6d2b4-795f-4742-a7af-5aa7938f88a5","businessKey":"biz_1773909790708","_starterName":"管理员"}
+[Worker] Looking for approvalId: 62a6d2b4-795f-4742-a7af-5aa7938f88a5
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821853, processInstanceKey=2251799813821841, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821853, processInstanceKey=2251799813821841, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"19828395638","starterId":41,"approvalId":"69b0cd10-8559-4caa-b0d2-4c2dc1e127bb","businessKey":"biz_1773909873206","_starterName":"徐菊芬"}
+[Worker] Looking for approvalId: 69b0cd10-8559-4caa-b0d2-4c2dc1e127bb
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813821946, processInstanceKey=2251799813821935, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813821946, processInstanceKey=2251799813821935, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":1,"approvalId":"dd3032f3-5ea5-43ef-b5fc-88294397b97c","businessKey":"biz_debug2_1773910885","_starterName":""}
+[Worker] Looking for approvalId: dd3032f3-5ea5-43ef-b5fc-88294397b97c
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813822034, processInstanceKey=2251799813822023, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813822034, processInstanceKey=2251799813822023, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":1,"approvalId":"069a42e8-2732-4963-a899-e6a9d0e9610f","businessKey":"biz_fixed2_1773911594","_starterName":""}
+[Worker] Looking for approvalId: 069a42e8-2732-4963-a899-e6a9d0e9610f
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813822209, processInstanceKey=2251799813822197, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813822209, processInstanceKey=2251799813822197, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"reason":"","applicant":"admin","starterId":1,"approvalId":"385ce6a8-75dc-4225-ac86-b86aabe0ef4a","businessKey":"biz_1773913252309","_starterName":"管理员"}
+[Worker] Looking for approvalId: 385ce6a8-75dc-4225-ac86-b86aabe0ef4a
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=manager-approval, job.key=2251799813822230, processInstanceKey=2251799813822219, elementId=Task_Manager
+[Worker] createPendingTask: job=2251799813822230, processInstanceKey=2251799813822219, taskType=manager-approval, nodeId=Task_Manager
+[Worker] variables: {"amount":5000,"applicant":"admin","starterId":1,"approvalId":"f0c381a5-37e0-4dac-ae49-7aa3a772050c","businessKey":"biz_clean_test_1773913369892","_starterName":"管理员"}
+[Worker] Looking for approvalId: f0c381a5-37e0-4dac-ae49-7aa3a772050c
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819886, processInstanceKey=2251799813819862, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819886, processInstanceKey=2251799813819862, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819912, processInstanceKey=2251799813819890, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819912, processInstanceKey=2251799813819890, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819939, processInstanceKey=2251799813819917, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819939, processInstanceKey=2251799813819917, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813820080, processInstanceKey=2251799813820056, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813820080, processInstanceKey=2251799813820056, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820201, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820227, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821502, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821530, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821545, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821559, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821591, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821612, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821640, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821659, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821676, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821714, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821733, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821692, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821779, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821797, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821828, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821946, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813821853, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819886, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: f0c381a5-37e0-4dac-ae49-7aa3a772050c
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813822034, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813822209, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819912, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819939, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820080, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Using taskHeaders user admin -> User_Id: 1
+[Worker] Created pending task 26335b80-bd0c-4159-b6b8-86e3f5439f50 for job 2251799813822230
+[Worker] ====== HANDLER COMPLETE ====== taskId=26335b80-bd0c-4159-b6b8-86e3f5439f50
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819886, processInstanceKey=2251799813819862, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819886, processInstanceKey=2251799813819862, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819912, processInstanceKey=2251799813819890, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819912, processInstanceKey=2251799813819890, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819939, processInstanceKey=2251799813819917, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819939, processInstanceKey=2251799813819917, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813820080, processInstanceKey=2251799813820056, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813820080, processInstanceKey=2251799813820056, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819912, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819886, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820080, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819939, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819886, processInstanceKey=2251799813819862, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819886, processInstanceKey=2251799813819862, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"dbb0cb1d-6670-489e-be94-7a4d6b41e1a4","_approvedBy":"1","businessKey":"test_1773679482128","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: dbb0cb1d-6670-489e-be94-7a4d6b41e1a4
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819912, processInstanceKey=2251799813819890, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819912, processInstanceKey=2251799813819890, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"51b20580-7f68-4654-9ff1-e40757ae2896","_approvedBy":"1","businessKey":"test_1773679492251","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 51b20580-7f68-4654-9ff1-e40757ae2896
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813819939, processInstanceKey=2251799813819917, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813819939, processInstanceKey=2251799813819917, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"测试原因","applicant":"测试用户","starterId":"1","approvalId":"2741f4d4-554c-481e-bb58-f81a1036d515","_approvedBy":"1","businessKey":"test_1773679502271","_starterName":"系统管理员","_approvalComment":"同意"}
+[Worker] Looking for approvalId: 2741f4d4-554c-481e-bb58-f81a1036d515
+[Worker] ====== HANDLER INVOKED ======
+[Worker] taskType=finance-approval, job.key=2251799813820080, processInstanceKey=2251799813820056, elementId=Task_Finance_Low
+[Worker] createPendingTask: job=2251799813820080, processInstanceKey=2251799813820056, taskType=finance-approval, nodeId=Task_Finance_Low
+[Worker] variables: {"amount":5000,"reason":"","assignee":"1","applicant":"系统管理员","starterId":"admin001","approvalId":"7fcb0de7-3327-499c-8ce7-f359856e1587","_approvedBy":"admin001","businessKey":"biz_1773679832256","_starterName":"系统管理员","_approvalComment":""}
+[Worker] Looking for approvalId: 7fcb0de7-3327-499c-8ce7-f359856e1587
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819886, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819912, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813819939, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[Worker] Found approval: null
+[Worker] No approval found for job 2251799813820080, skipping task creation
+[Worker] ====== HANDLER COMPLETE ====== taskId=
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 1 tasks
+[Engine] Checking for existing process instance with businessKey: biz_1773913618174
+[EngineRunner] Deploying BPMN, cleanXml length: 2985
+Deployed to Zeebe: {
+  deployments: [ { process: [Object], Metadata: 'process' } ],
+  key: '2251799813822272',
+  tenantId: ''
+}
+[startWorkflow] Found 3 task types: manager-approval, finance-approval, boss-approval
+Worker for manager-approval already exists, skipping
+Worker for finance-approval already exists, skipping
+Worker for boss-approval already exists, skipping
+[EngineRunner] createProcessInstance bpmnProcessId: approval-process
+[EngineRunner] cleanVariables: {"amount":5000,"reason":"","applicant":"admin","_starterName":"管理员","businessKey":"biz_1773913618174","starterId":1,"approvalId":"6e9869aa-2457-40c2-b2b0-5d6c92cc8d98"}
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 1 tasks
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 1 tasks
+[DbAdapt] Query table t_SdOrder failed: Error: Invalid column name 'CREATE_TIME'.
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 0 tasks
+[DbAdapt] Query table t_SdOrder failed: Error: Invalid column name 'CREATE_TIME'.
+[DbAdapt] Query table t_SdOrder failed: Error: Invalid column name 'CREATE_TIME'.
+[getUserTasks] userName: admin
+[getUserTasks] Filtering by user: admin
+[getUserTasks] Found 0 tasks
+[DbAdapt] Query table t_SdOrder failed: Error: Invalid column name 'CREATE_TIME'.

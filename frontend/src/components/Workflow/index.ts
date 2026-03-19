@@ -1,0 +1,6 @@
+export { default as PendingTasks } from './PendingTasks.vue'
+export { default as ApprovalList } from './ApprovalList.vue'
+export { default as BpmnManager } from './BpmnManager.vue'
+export { default as LoadSave } from './LoadSave.vue'
+export { default as UserLogin } from './UserLogin.vue'
+export { default as StartWorkflow } from './StartWorkflow.vue'
