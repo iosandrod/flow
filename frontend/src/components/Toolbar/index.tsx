@@ -158,7 +158,7 @@ const Toolbar = defineComponent({
     onMounted(() => {
       window.addEventListener('user-changed', handleUserChange)
       setTimeout(() => {
-        loadDefaultBpmn()//
+        // loadDefaultBpmn()//
       }, 10);
     })
 

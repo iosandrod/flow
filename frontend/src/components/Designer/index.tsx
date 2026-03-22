@@ -1,8 +1,9 @@
-import { defineComponent, ref, toRefs, nextTick, watch } from 'vue'
+import { defineComponent, ref, toRefs, nextTick, watch, onMounted } from 'vue'
 import type { PropType } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import editor from '@/store/editor'
+import modelerStore from '@/store/modeler'
 import modulesAndModdle from '@/components/Designer/modulesAndModdle'
 import initModeler from '@/components/Designer/initModeler'
 import { createNewDiagram } from '@/utils'
@@ -21,11 +22,33 @@ const Designer = defineComponent({
     const { editorSettings } = storeToRefs(editorStore)
     const { xml } = toRefs(props)
     const designer = ref<HTMLDivElement | null>(null)
+    let isInitialized = false
+
+    async function initEditor() {
+      if (!designer.value || isInitialized) return
+      try {
+        const modelerModules = modulesAndModdle(editorSettings)
+        await nextTick()
+        await initModeler(designer, modelerModules, emit)
+        isInitialized = true
+        await createNewDiagram(xml.value, editorSettings.value)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+    onMounted(async () => {
+      await nextTick()
+      await initEditor()
+    })
 
     watch(
       () => editorSettings.value,
       async (value, oldValue) => {
         try {
+          if (!isInitialized) {
+            await initEditor()
+          }
           const modelerModules = modulesAndModdle(editorSettings)
           await nextTick()
           await initModeler(designer, modelerModules, emit)
@@ -35,10 +58,10 @@ const Designer = defineComponent({
             await createNewDiagram(xml.value, editorSettings.value)
           }
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
       },
-      { deep: true, immediate: true }
+      { deep: true }
     )
 
     watch(

@@ -222,6 +222,7 @@ export class WorkerManager {
     }
 
     async completePendingTask(taskId: string, userId: string, comment?: string, variables?: Record<string, any>): Promise<any> {
+        debugger//
         const pendingTask = this.pendingTasks.get(taskId);
         const db = this.dbAdapt!;
         if (!pendingTask) {

@@ -29,12 +29,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, nextTick } from 'vue'
 import { h } from 'vue'
 import { NSpace, NButton, NIcon, NText, NTag, NModal, NInput, NDataTable, NDataTableColumns, useMessage } from 'naive-ui'
 import { FolderOpen, Save } from 'lucide-vue-next'
 import type { User, WorkflowResponse } from '../types'
 import design from '../../disign.vue'
+import modelerStore from '@/store/modeler'
 
 const props = defineProps<{
   apiRequest: (action: string, data: any) => Promise<WorkflowResponse>
@@ -66,7 +67,14 @@ watch(() => props.selectedFlow, (newVal) => {
   if (newVal) {
     handleSelectRow(newVal)
   }
-}, { immediate: true })
+})
+
+onMounted(async () => {
+  await nextTick()
+  if (props.selectedFlow) {
+    handleSelectRow(props.selectedFlow)
+  }
+})
 
 const columns: NDataTableColumns<any>[] = [
   { title: '流程名称', key: 'name', ellipsis: { tooltip: true } },
@@ -110,10 +118,27 @@ async function handleSelectRow(row: any) {
   }
   showSelectModal.value = false
 
-  if (designRef.value) {
-    await designRef.value.openBpmnByKey(key, props.apiRequest)
-    message.success('流程加载成功')
+  async function tryLoad() {
+    const store = modelerStore()
+    const modeler = store?.getModeler
+    if (!modeler) {
+      setTimeout(tryLoad, 200)
+      return
+    }
+    try {
+      const result = await props.apiRequest('getBpmn', { bpmnKey: key })
+      if (result?.success && result?.data) {
+        const xmlContent = result.data.bpmnXml || result.data.xml || result.data
+        if (xmlContent) {
+          await modeler.importXML(xmlContent)
+          message.success('流程加载成功')
+        }
+      }
+    } catch (e) {
+      message.error('流程加载失败: ' + (e?.message || e))
+    }
   }
+  tryLoad()
 }
 
 async function handleSave() {

@@ -15,6 +15,53 @@ import {
     GetProcessVariablesStrategy
 } from './WorkflowStrategy';
 import { WorkflowData, WorkflowResponse } from '../types';
+import { BpmnModdle } from 'bpmn-moddle';
+
+const bpmnModdle = new BpmnModdle();
+
+async function ensureDiXml(xml: string): Promise<string> {
+    if (xml.includes('bpmndi:')) return xml;
+    
+    try {
+        const { rootElement } = await bpmnModdle.fromXML(xml) as any;
+        const processes = rootElement.rootElements.filter((e: any) => e.$type === 'bpmn:Process');
+        if (!processes.length) return xml;
+        
+        const process = processes[0];
+        const processId = process.id;
+        const elements = process.flowElements || [];
+        
+        let shapes = '';
+        let edges = '';
+        const cols = Math.ceil(Math.sqrt(elements.length));
+        const startX = 100, startY = 100;
+        const hGap = 180, vGap = 120;
+        
+        elements.forEach((el: any, idx: number) => {
+            const col = idx % cols;
+            const row = Math.floor(idx / cols);
+            const x = startX + col * hGap;
+            const y = startY + row * vGap;
+            
+            if (el.$type === 'bpmn:SequenceFlow') {
+                const nextCol = (idx + 1) % cols;
+                const nextRow = Math.floor((idx + 1) / cols);
+                edges += `<bpmndi:BPMNEdge id="${el.id}_di" bpmnElement="${el.id}"><di:waypoint x="${x}" y="${y}"/><di:waypoint x="${startX + nextCol * hGap}" y="${startY + nextRow * vGap}"/></bpmndi:BPMNEdge>`;
+            } else {
+                const w = el.$type.includes('Gateway') ? 50 : 100;
+                const h = el.$type.includes('Gateway') ? 50 : 80;
+                const isMarker = el.$type === 'bpmn:ExclusiveGateway' ? ' isMarkerVisible="true"' : '';
+                shapes += `<bpmndi:BPMNShape id="${el.id}_di" bpmnElement="${el.id}"${isMarker}><dc:Bounds x="${x}" y="${y}" width="${w}" height="${h}"/></bpmndi:BPMNShape>`;
+            }
+        });
+        
+        const di = `<bpmndi:BPMNDiagram id="BPMNDiagram_1"><bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="${processId}">${shapes}${edges}</bpmndi:BPMNPlane></bpmndi:BPMNDiagram>`;
+        
+        return xml.replace(/<\/bpmn:definitions>/i, `${di}</bpmn:definitions>`);
+    } catch (e) {
+        return xml;
+    }
+}
 
 export class StrategyManager {
     private strategies: Map<string, WorkflowStrategy> = new Map();
@@ -246,7 +293,11 @@ export class StrategyManager {
                 case 'getBpmn':
                     const bpmnDetail = await this.dbAdapt.getFlowDesignByKey(data.bpmnKey);
                     if (bpmnDetail) {
-                        return { success: true, data: this.formatFlowDesign(bpmnDetail) };
+                        const formatted = this.formatFlowDesign(bpmnDetail);
+                        if (formatted.bpmnXml) {
+                            formatted.bpmnXml = await ensureDiXml(formatted.bpmnXml);
+                        }
+                        return { success: true, data: formatted };
                     }
                     return { success: false, message: 'BPMN not found' };
 

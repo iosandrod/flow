@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, h, defineComponent, PropType } from 'vue'
+import { ref, computed, h, nextTick, defineComponent, PropType } from 'vue'
 import { 
   NConfigProvider, NLayout, NLayoutSider, NMenu, NIcon, NAvatar, 
   NDropdown, NSpace, NMessageProvider, NDialogProvider 
