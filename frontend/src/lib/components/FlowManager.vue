@@ -40,10 +40,9 @@
                 </template>
               </vxe-column>
               <vxe-column field="updateTime" title="更新时间" width="180" />
-              <vxe-column title="操作" width="200">
+              <vxe-column title="操作" width="150">
                 <template v-slot:default="{ row }">
                   <n-space>
-                    <n-button size="small" type="info" @click.stop="viewFlow(row)">查看</n-button>
                     <n-button size="small" type="primary" @click.stop="handleEditFlow(row)">编辑</n-button>
                     <n-button size="small" type="error" @click.stop="deleteFlow(row)">删除</n-button>
                   </n-space>
@@ -185,6 +184,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'error', error: { code: string, message: string }): void
   (e: 'openDesigner', data: { flow?: BpmnDesign, flowName?: string, flowKey?: string }): void
+  (e: 'navigate', page: string, data?: { flow?: BpmnDesign }): void
 }>()
 
 const message = useMessage()
@@ -251,9 +251,7 @@ function handleCreateFlow() {
 
 function handleEditFlow(flow: BpmnDesign | null) {
   if (!flow) return
-  designerTarget.value = flow
-  showDetailModal.value = false
-  showDesignerConfirmModal.value = true
+  emit('navigate', 'approvalDesigner', { flow })
 }
 
 function confirmOpenDesigner() {

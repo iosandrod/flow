@@ -1,3 +1,81 @@
+<script setup lang="ts">
+  import { markRaw, nextTick, reactive, ref } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  import debounce from 'lodash.debounce'
+  import useElementUpdateListener from '@/hooks/useElementUpdateListener'
+  import catchUndefElement from '@/utils/CatchUndefElement'
+  import { addTaskHeader, getTaskHeaders, removeTaskHeader } from '@/bo-utils/taskHeadersUtil'
+  import type { VxeGridPropTypes, VxeFormPropTypes } from 'vxe-pc-ui'
+
+  const { t } = useI18n()
+
+  let scopedElement: BpmnElement | undefined
+  let headersRaw: any[] = []
+
+  const headers = ref<any[]>([])
+  const modalVisible = ref(false)
+
+  const formData = reactive({ key: '', value: '' })
+
+  const reloadData = () =>
+    catchUndefElement((element) => {
+      scopedElement = element
+      headersRaw = markRaw(getTaskHeaders(element))
+      headers.value = headersRaw.map((item: any) => ({ ...item }))
+    })
+
+  useElementUpdateListener(reloadData)
+
+  const removeHeader = (index: number) => {
+    if (!scopedElement) return
+    removeTaskHeader(scopedElement, headersRaw[index])
+    reloadData()
+  }
+
+  const saveHeader = debounce(() => {
+    if (!scopedElement) return
+    if (!formData.key || !formData.value) return
+    addTaskHeader(scopedElement, { key: formData.key, value: formData.value })
+    formData.key = ''
+    formData.value = ''
+    modalVisible.value = false
+    reloadData()
+  }, 300)
+
+  const openModal = async () => {
+    formData.key = ''
+    formData.value = ''
+    modalVisible.value = true
+    await nextTick()
+  }
+
+  const columns: VxeGridPropTypes.Columns = [
+    { type: 'seq', width: 50 },
+    { field: 'key', title: t('panel.headerKey'), showOverflow: true },
+    { field: 'value', title: t('panel.headerValue'), showOverflow: true },
+    {
+      title: t('panel.operations'),
+      width: 80,
+      slots: { default: 'operations_default' }
+    }
+  ]
+
+  const formItems: VxeFormPropTypes.Items = [
+    {
+      field: 'key',
+      title: t('panel.headerKey'),
+      span: 24,
+      itemRender: { name: 'VxeInput' }
+    },
+    {
+      field: 'value',
+      title: t('panel.headerValue'),
+      span: 24,
+      itemRender: { name: 'VxeInput' }
+    }
+  ]
+</script>
+
 <template>
   <n-collapse-item name="element-task-headers">
     <template #header>
@@ -10,149 +88,36 @@
         {{ headers.length }}
       </n-tag>
     </template>
-    <div class="element-task-headers">
-      <n-data-table size="small" max-height="20vh" :columns="columns" :data="headers" />
 
-      <n-button type="info" class="inline-large-button" secondary @click="openHeaderModel">
-        <lucide-icon :size="20" name="Plus" />
-        <span>{{ $t('panel.addTaskHeader') }}</span>
-      </n-button>
-    </div>
+    <vxe-grid
+      :data="headers"
+      :columns="columns"
+      :max-height="200"
+      :show-overflow="true"
+      size="small"
+    >
+      <template #operations_default="{ $rowIndex }">
+        <n-button quaternary size="small" type="error" @click="removeHeader($rowIndex)">
+          {{ $t('panel.remove') }}
+        </n-button>
+      </template>
+    </vxe-grid>
+
+    <n-button type="info" class="inline-large-button" secondary @click="openModal">
+      <lucide-icon :size="20" name="Plus" />
+      <span>{{ $t('panel.addTaskHeader') }}</span>
+    </n-button>
 
     <n-modal
-      v-model:show="modelVisible"
+      v-model:show="modalVisible"
       preset="dialog"
       :title="$t('panel.addTaskHeader')"
       :style="{ width: '640px' }"
     >
-      <n-form ref="formRef" :model="newHeader" :rules="rules" aria-modal="true">
-        <n-form-item path="key" :label="$t('panel.headerKey')">
-          <n-input v-model:value="newHeader.key" @keydown.enter.prevent />
-        </n-form-item>
-        <n-form-item path="value" :label="$t('panel.headerValue')">
-          <n-input v-model:value="newHeader.value" @keydown.enter.prevent />
-        </n-form-item>
-      </n-form>
+      <vxe-form :data="formData" :items="formItems" title-width="120" />
       <template #action>
-        <n-button size="small" type="info" @click="addHeader">{{ $t('panel.confirm') }}</n-button>
+        <n-button size="small" type="info" @click="saveHeader">{{ $t('panel.confirm') }}</n-button>
       </template>
     </n-modal>
   </n-collapse-item>
 </template>
-
-<script lang="ts">
-  import { h, defineComponent, toRaw, markRaw } from 'vue'
-  import { mapState } from 'pinia'
-  import modelerStore from '@/store/modeler'
-  import { Element } from 'diagram-js/lib/model/Types'
-  import {
-    addTaskHeader,
-    getTaskHeaders,
-    removeTaskHeader
-  } from '@/bo-utils/taskHeadersUtil'
-
-  import { FormInst, NButton } from 'naive-ui'
-  import EventEmitter from '@/utils/EventEmitter'
-
-  export default defineComponent({
-    name: 'ElementTaskHeaders',
-    data() {
-      return {
-        headers: [],
-        headersRaw: [],
-        newHeader: { key: '', value: '' },
-        rules: {
-          key: { required: true, message: 'Key不能为空', trigger: ['blur', 'change'] },
-          value: { required: true, message: 'Value不能为空', trigger: ['blur', 'change'] }
-        },
-        modelVisible: false
-      }
-    },
-    computed: {
-      ...mapState(modelerStore, ['getActive', 'getActiveId']),
-      columns() {
-        return [
-          {
-            title: this.$t('panel.index'),
-            key: 'index',
-            render: (a, index) => index + 1,
-            width: 60
-          },
-          {
-            title: 'Key',
-            key: 'key',
-            ellipsis: {
-              tooltip: true
-            }
-          },
-          {
-            title: 'Value',
-            key: 'value',
-            ellipsis: {
-              tooltip: true
-            }
-          },
-          {
-            title: this.$t('panel.operations'),
-            key: 'operation',
-            width: 80,
-            align: 'center',
-            render: (row, index) =>
-              h(
-                NButton,
-                {
-                  quaternary: true,
-                  size: 'small',
-                  type: 'error',
-                  onClick: () => this.removeHeader(index)
-                },
-                {
-                  default: () => this.$t('panel.remove')
-                }
-              )
-          }
-        ]
-      }
-    },
-    watch: {
-      getActiveId: {
-        immediate: true,
-        handler() {
-          this.reloadTaskHeaders()
-        }
-      }
-    },
-    mounted() {
-      this.reloadTaskHeaders()
-      EventEmitter.on('element-update', this.reloadTaskHeaders)
-    },
-    methods: {
-      async reloadTaskHeaders() {
-        this.modelVisible = false
-        await this.$nextTick()
-        this.newHeader = { key: '', value: '' }
-        ;(this.headersRaw as any[]) = markRaw(getTaskHeaders(this.getActive as Element))
-        this.headers = JSON.parse(JSON.stringify(this.headersRaw))
-      },
-      removeHeader(propIndex: number) {
-        removeTaskHeader(this.getActive as Element, this.headersRaw[propIndex])
-        this.reloadTaskHeaders()
-      },
-      async addHeader() {
-        ;(this.$refs.formRef as FormInst).validate((errors) => {
-          if (!errors) {
-            addTaskHeader(this.getActive as Element, toRaw(this.newHeader))
-            this.reloadTaskHeaders()
-          }
-        })
-      },
-      async openHeaderModel() {
-        this.modelVisible = true
-        await this.$nextTick()
-        ;(this.$refs.formRef as FormInst).restoreValidation()
-      }
-    }
-  })
-</script>
-
-<style scoped></style>

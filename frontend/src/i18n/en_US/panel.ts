@@ -50,5 +50,14 @@ export default {
   operations: 'operations',
   edit: 'edit',
   remove: 'remove',
-  confirm: 'confirm'
+  confirm: 'confirm',
+
+  taskDefinition: 'Task Definition',
+  taskDefinitionType: 'Type',
+  taskDefinitionRetries: 'Retries',
+
+  taskHeaders: 'Task Headers',
+  addTaskHeader: 'Add Task Header',
+  headerKey: 'Key',
+  headerValue: 'Value'
 }

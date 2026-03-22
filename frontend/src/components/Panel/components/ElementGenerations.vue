@@ -1,36 +1,10 @@
-<template>
-  <n-collapse-item name="base-info">
-    <template #header>
-      <collapse-title :title="$t('panel.general')">
-        <lucide-icon name="Info" />
-      </collapse-title>
-    </template>
-
-    <edit-item :label="$t('panel.id')">
-      <n-input v-model:value="elementId" maxlength="32" @change="updateElementId" />
-    </edit-item>
-
-    <edit-item :label="$t('panel.name')">
-      <n-input v-model:value="elementName" maxlength="20" @change="updateElementName" />
-    </edit-item>
-
-    <template v-if="isProcess">
-      <edit-item key="version" :label="$t('panel.version')">
-        <n-input v-model:value="elementVersion" maxlength="20" @change="updateElementVersion" />
-      </edit-item>
-
-      <edit-item key="executable" :label="$t('panel.executable')">
-        <n-switch v-model:value="elementExecutable" @update:value="updateElementExecutable" />
-      </edit-item>
-    </template>
-  </n-collapse-item>
-</template>
-
-<script lang="ts">
-  import { defineComponent } from 'vue'
-  import { mapState } from 'pinia'
-  import modelerStore from '@/store/modeler'
-  import { Element } from 'diagram-js/lib/model/Types'
+<script setup lang="ts">
+  import { reactive, watch } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  import debounce from 'lodash.debounce'
+  import useElementUpdateListener from '@/hooks/useElementUpdateListener'
+  import catchUndefElement from '@/utils/CatchUndefElement'
+  import modeler from '@/store/modeler'
   import { getNameValue, setNameValue } from '@/bo-utils/nameUtil'
   import { setIdValue } from '@/bo-utils/idUtil'
   import {
@@ -39,53 +13,119 @@
     setProcessExecutable,
     setProcessVersionTag
   } from '@/bo-utils/processUtil'
-  import EventEmitter from '@/utils/EventEmitter'
+  import type { VxeFormPropTypes } from 'vxe-pc-ui'
 
-  export default defineComponent({
-    name: 'ElementGenerations',
-    data() {
-      return {
-        elementId: '',
-        elementName: '',
-        elementVersion: '',
-        elementExecutable: true,
-        isProcess: false
-      }
-    },
-    computed: {
-      ...mapState(modelerStore, ['getActive', 'getActiveId'])
-    },
-    mounted() {
-      this.reloadGenerationData()
-      EventEmitter.on('element-update', this.reloadGenerationData)
-    },
-    methods: {
-      reloadGenerationData() {
-        this.isProcess = !!this.getActive && this.getActive.type === 'bpmn:Process'
-        this.elementId = this.getActiveId as string
-        this.elementName = getNameValue(this.getActive as Element) || ''
-        if (this.isProcess) {
-          this.elementExecutable = getProcessExecutable(this.getActive as Element)
-          this.elementVersion = getProcessVersionTag(this.getActive as Element) || ''
-        }
-      },
-      updateElementName(value: string) {
-        setNameValue(this.getActive as Element, value)
-      },
-      updateElementId(value: string) {
-        setIdValue(this.getActive as Element, value)
-      },
-      updateElementVersion(value: string) {
-        const reg = /((\d|([1-9](\d*))).){2}(\d|([1-9](\d*)))/
-        if (reg.test(value)) {
-          setProcessVersionTag(this.getActive as Element, value)
-        } else {
-          window.__messageBox.error('版本号必须符合语义化版本2.0.0 要点')
-        }
-      },
-      updateElementExecutable(value: boolean) {
-        setProcessExecutable(this.getActive as Element, value)
-      }
-    }
+  const { t } = useI18n()
+
+  let scopedElement: BpmnElement | undefined
+
+  const formData = reactive({
+    id: '',
+    name: '',
+    versionTag: '',
+    isExecutable: true
   })
+
+  const isProcess = reactive({ value: false })
+
+  const reloadData = () =>
+    catchUndefElement((element) => {
+      scopedElement = element
+      isProcess.value = element.type === 'bpmn:Process'
+      formData.id = element.id
+      formData.name = getNameValue(element) || ''
+      if (isProcess.value) {
+        formData.isExecutable = getProcessExecutable(element)
+        formData.versionTag = getProcessVersionTag(element) || ''
+      } else {
+        formData.isExecutable = true
+        formData.versionTag = ''
+      }
+    })
+
+  useElementUpdateListener(reloadData)
+
+  const updateName = debounce(() => {
+    if (!scopedElement) return
+    setNameValue(scopedElement, formData.name)
+  }, 300)
+
+  const updateId = debounce(() => {
+    if (!scopedElement) return
+    setIdValue(scopedElement, formData.id)
+  }, 300)
+
+  const updateVersion = debounce(() => {
+    if (!scopedElement || !isProcess.value) return
+    const reg = /((\d|([1-9](\d*))).){2}(\d|([1-9](\d*)))/
+    if (reg.test(formData.versionTag)) {
+      setProcessVersionTag(scopedElement, formData.versionTag)
+    } else {
+      window.__messageBox.error('版本号必须符合语义化版本2.0.0 要点')
+    }
+  }, 300)
+
+  const updateExecutable = debounce(() => {
+    if (!scopedElement || !isProcess.value) return
+    setProcessExecutable(scopedElement, formData.isExecutable)
+  }, 300)
+
+  watch(
+    () => formData.name,
+    () => updateName()
+  )
+  watch(
+    () => formData.id,
+    () => updateId()
+  )
+  watch(
+    () => formData.versionTag,
+    () => updateVersion()
+  )
+  watch(
+    () => formData.isExecutable,
+    () => updateExecutable()
+  )
+
+  const items: VxeFormPropTypes.Items = [
+    {
+      field: 'id',
+      title: t('panel.id'),
+      span: 24,
+      itemRender: { name: 'VxeInput' }
+    },
+    {
+      field: 'name',
+      title: t('panel.name'),
+      span: 24,
+      itemRender: { name: 'VxeInput' }
+    },
+    {
+      field: 'versionTag',
+      title: t('panel.version'),
+      span: 24,
+      folding: true,
+      itemRender: { name: 'VxeInput' },
+      visibleMethod: () => isProcess.value
+    },
+    {
+      field: 'isExecutable',
+      title: t('panel.executable'),
+      span: 24,
+      folding: true,
+      itemRender: { name: 'VxeSwitch' },
+      visibleMethod: () => isProcess.value
+    }
+  ]
 </script>
+
+<template>
+  <n-collapse-item name="base-info">
+    <template #header>
+      <collapse-title :title="$t('panel.general')">
+        <lucide-icon name="Info" />
+      </collapse-title>
+    </template>
+    <vxe-form :data="formData" :items="items" title-width="80" />
+  </n-collapse-item>
+</template>

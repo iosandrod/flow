@@ -27,6 +27,7 @@ import ElementJobExecution from './components/ElementJobExecution.vue'
 import ElementStartInitiator from './components/ElementStartInitiator.vue'
 import ElementExtensionTaskDefinion from './components/ElementExtensionTaskDefinion.vue'
 import UserAssignment from './components/UserAssignment.vue'
+import ElementTaskHeaders from './components/ElementTaskHeaders.vue'
 
 import { isCanbeConditional } from '@/bo-utils/conditionUtil'
 import { customTranslate } from '@/additional-modules/Translate'
@@ -57,7 +58,8 @@ const Panel = defineComponent({
       isAsynchronous(element) && renderComponents.push(ElementAsyncContinuations)
       isStartInitializable(element) && renderComponents.push(ElementStartInitiator)
       isUserAssignmentSupported(element) && renderComponents.push(UserAssignment)
-      isServiceTask(element) && renderComponents.push(ElementExtensionTaskDefinion)//
+      isServiceTask(element) && renderComponents.push(ElementExtensionTaskDefinion)
+      isServiceTask(element) && renderComponents.push(ElementTaskHeaders)
     }
 
     // 设置选中元素，更新 store

@@ -177,10 +177,21 @@ export class FlowManager {
             throw new Error(`Approval not found`);
         }
 
-        const taskComplete = await this.dbAdapt.completeTask(taskId, {
-            ASSIGNEE_: userId
-        });
+        const flowDesign = await this.dbAdapt.getFlowDesignByKey(approval.BUSINESS_TYPE_);
+        if (!flowDesign?.BPMN_XML_) {
+            throw new Error('Flow design not found');
+        }
 
+        const flowVariables = JSON.parse(approval.FORM_DATA_ || '{}');
+        const updatedFormData = { ...flowVariables, ...variables };
+
+        // ========== Step 1: 推进 Zeebe 流程 ==========
+        const workerResult = await workerManager.completePendingTask(taskId, userId, comment, updatedFormData);
+
+        // ========== Step 2: 更新任务状态 ==========
+        await this.dbAdapt.completeTask(taskId, 'D');
+
+        // ========== Step 3: 写入历史 ==========
         await this.dbAdapt.addTaskHistory({
             PROC_INST_ID_: task.PROC_INST_ID_,
             PROC_DEF_KEY_: task.PROC_DEF_KEY_,
@@ -202,24 +213,10 @@ export class FlowManager {
             COMMENT_: comment
         });
 
-        const flowDesign = await this.dbAdapt.getFlowDesignByKey(approval.BUSINESS_TYPE_);
-        if (!flowDesign?.BPMN_XML_) {
-            throw new Error('Flow design not found');
-        }
-
-        const flowVariables = JSON.parse(approval.FORM_DATA_ || '{}');
-        const updatedFormData = { ...flowVariables, ...variables };
-        
-        // 调用 workerManager.completePendingTask 推进 Zeebe 流程
-        // 任务由 Worker 监听自动创建，不需要手动创建
-        const workerResult = await workerManager.completePendingTask(taskId, userId, comment, updatedFormData);
-        console.log('[approveTask] Worker complete result:', JSON.stringify(workerResult));
-
-        // 检查是否还有待处理的任务（由 Worker 自动创建）
+        // ========== Step 4: 更新审批单状态 ==========
         const remainingTasks = await this.dbAdapt.getPendingTasks(task.PROC_INST_ID_);
         const hasMoreTasks = remainingTasks.length > 0;
         const newStatus = hasMoreTasks ? ProcessStatus.APPROVING : ProcessStatus.COMPLETED;
-        
         await this.dbAdapt.updateBizApproval(approval.ID_, {
             STATUS_: newStatus,
             CURRENT_NODE_: hasMoreTasks ? 'pending' : 'completed',
@@ -249,9 +246,7 @@ export class FlowManager {
             throw new Error(`Approval not found`);
         }
 
-        await this.dbAdapt.completeTask(taskId, {
-            ASSIGNEE_: userId
-        });
+        await this.dbAdapt.completeTask(taskId, 'R');
 
         await this.dbAdapt.addTaskHistory({
             PROC_INST_ID_: task.PROC_INST_ID_,
@@ -302,9 +297,7 @@ export class FlowManager {
 
         const pendingTasks = await this.dbAdapt.getPendingTasks(approval.PROC_INST_ID_);
         for (const task of pendingTasks) {
-            await this.dbAdapt.completeTask(task.ID_, {
-                ASSIGNEE_: userId
-            });
+            await this.dbAdapt.completeTask(task.ID_, 'R');
 
             await this.dbAdapt.addTaskHistory({
                 PROC_INST_ID_: approval.PROC_INST_ID_,

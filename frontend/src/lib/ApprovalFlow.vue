@@ -90,6 +90,7 @@
                 :api-request="apiRequest"
                 :current-user="currentUser"
                 @open-designer="handleOpenDesigner"
+                @navigate="handleNavigate"
                 @error="handleError"
               />
               
@@ -106,6 +107,7 @@
                 v-else-if="currentPage === 'approvalDesigner'"
                 :api-request="apiRequest"
                 :current-user="currentUser"
+                :selected-flow="selectedFlowForDesigner"
                 @error="handleError"
                 @open-designer="handleOpenDesigner"
               />
@@ -153,6 +155,7 @@ const emit = defineEmits<{
 
 const collapsed = ref(false)
 const currentPage = ref<PageType>(props.defaultPage || 'dashboard')
+const selectedFlowForDesigner = ref<any>(null)
 
 const mockUsers: UserType[] = [
   { id: 41, username: '19828395638', name: '徐菊芬', role: 'manager', avatarColor: '#2080f0' },
@@ -204,6 +207,24 @@ function handleMenuClick(key: string) {
   emit('navigate', key as PageType)
 }
 
+function handleNavigate(page: string, data?: { flow?: any }) {
+  currentPage.value = page as PageType
+  if (data?.flow) {
+    selectedFlowForDesigner.value = data.flow
+  }
+  emit('navigate', page as PageType)
+}
+
+function handleOpenDesigner(data: { flow?: any, flowName?: string, flowKey?: string }) {
+  if (data.flow) {
+    selectedFlowForDesigner.value = data.flow
+  }
+  emit('openDesigner', data)
+  if (props.debug) {
+    console.log('[ApprovalFlow] Open Designer:', data)
+  }
+}
+
 function handleUserAction(key: string) {
   if (key === 'logout') {
     window.location.reload()
@@ -231,12 +252,6 @@ function handleError(error: { code: string, message: string }) {
   }
 }
 
-function handleOpenDesigner(data: { flow?: any, flowName?: string, flowKey?: string }) {
-  emit('openDesigner', data)
-  if (props.debug) {
-    console.log('[ApprovalFlow] Open Designer:', data)
-  }
-}
 </script>
 
 <style scoped>

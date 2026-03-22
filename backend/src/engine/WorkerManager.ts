@@ -204,6 +204,8 @@ export class WorkerManager {
             customHeaders: { ...customHeaders }
         } as any));
 
+        await this.withRetry(() => this.dbAdapt!.updateTaskStatus(task.ID_, 'A'));
+
         const pendingTask: PendingTask = {
             job: job,
             taskId: task.ID_,
@@ -222,7 +224,6 @@ export class WorkerManager {
     async completePendingTask(taskId: string, userId: string, comment?: string, variables?: Record<string, any>): Promise<any> {
         const pendingTask = this.pendingTasks.get(taskId);
         const db = this.dbAdapt!;
-
         if (!pendingTask) {
             console.log(`[Worker] Task ${taskId} not in pendingTasks, falling back to DB lookup`);
 
@@ -261,8 +262,7 @@ export class WorkerManager {
 
             if (!this.zc) {
                 throw new Error('Zeebe client not connected');
-            }
-
+            }//
             try {
                 await this.zc.completeJob({
                     jobKey: taskKey,
@@ -274,15 +274,18 @@ export class WorkerManager {
                 });
                 console.log(`[Worker] Completed Zeebe job ${taskKey} for task ${taskId} via DB fallback`);
             } catch (err: any) {
-                console.error(`[Worker] Failed to complete Zeebe job ${taskKey}:`, err.message);
-                throw err;
+                const isNotFound = err?.message?.includes('NOT_FOUND') || err?.code === 'NOT_FOUND' || err?.status === 404;
+                if (isNotFound) {
+                    console.log(`[Worker] Zeebe job ${taskKey} already completed (NOT_FOUND) — skipping job completion, proceeding with DB updates`);
+                } else {
+                    console.error(`[Worker] Failed to complete Zeebe job ${taskKey}:`, err.message);
+                    throw err;
+                }
             }
-
             return { taskId, jobKey: taskKey, procInstId, message: 'Task completed via DB fallback' };
-        }
-
+        }//
         const { job, procInstId, taskType, nodeId, _manual } = pendingTask;
-
+        //
         if (_manual || !job?.key) {
             console.log(`[Worker] Task ${taskId} is manually created, skipping job.complete()`);
             this.pendingTasks.delete(taskId);
@@ -320,8 +323,13 @@ export class WorkerManager {
             console.log(`[Worker] Completing job ${job.key} with variables:`, JSON.stringify(completeVars));
             await job.complete(completeVars);
             console.log(`[Worker] Completed job ${job.key} for task ${taskId}`);
-        } catch (err) {
-            console.error(`[Worker] Failed to complete job ${job.key}:`, err);
+        } catch (err: any) {
+            const isNotFound = err?.message?.includes('NOT_FOUND') || err?.code === 'NOT_FOUND' || err?.status === 404;
+            if (isNotFound) {
+                console.log(`[Worker] Zeebe job ${job.key} already completed (NOT_FOUND) — job was likely completed by handleOrphanedJobs on startup`);
+            } else {
+                console.error(`[Worker] Failed to complete job ${job.key}:`, err);
+            }
         }
 
         this.pendingTasks.delete(taskId);

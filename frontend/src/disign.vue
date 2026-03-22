@@ -61,6 +61,20 @@ onMounted(() => {
     ev.preventDefault()
   })
 })
+
+async function openBpmnByKey(key: string, apiRequest: (action: string, data: any) => Promise<any>) {
+  try {
+    const result = await apiRequest('getBpmn', { key })
+    if (result.success && result.data) {
+      const xmlContent = result.data.bpmnXml || result.data.xml || result.data
+      processXml.value = xmlContent
+    }
+  } catch (e) {
+    console.error('openBpmnByKey failed:', e)
+  }
+}
+
+defineExpose({ openBpmnByKey })
 </script>
 
 <style>

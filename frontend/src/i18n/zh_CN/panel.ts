@@ -50,5 +50,14 @@ export default {
   operations: '操作',
   edit: '编辑',
   remove: '移除',
-  confirm: '确认'
+  confirm: '确认',
+
+  taskDefinition: '任务定义',
+  taskDefinitionType: '类型',
+  taskDefinitionRetries: '重试次数',
+
+  taskHeaders: '任务头',
+  addTaskHeader: '添加任务头',
+  headerKey: '键',
+  headerValue: '值'
 }

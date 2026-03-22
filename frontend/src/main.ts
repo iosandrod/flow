@@ -4,6 +4,8 @@ import App from './App.vue'
 import router from './router'
 import 'vxe-table/lib/style.css'
 import VXETable from 'vxe-table'
+import 'vxe-pc-ui/lib/style.css'
+import VxeUIBase from 'vxe-pc-ui'
 
 import './styles/index.scss'
 
@@ -91,6 +93,7 @@ app.use(i18n)
 app.use(pinia)
 app.use(naive)
 app.use(VXETable)
+app.use(VxeUIBase)
 app.use(router)
 app.component('LucideIcon', LucideIcon)
 app.component('EditItem', EditItem)

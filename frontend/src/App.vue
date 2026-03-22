@@ -18,6 +18,7 @@
   import { ApprovalFlow } from '@/lib'
   import type { User, WorkflowResponse } from '@/lib/types'
   import flowDesign from './components/Designer/index'
+  import designVue from './disign.vue'
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 
   const currentUser = ref<User | null>(null)

@@ -1,23 +1,9 @@
-<template>
-  <n-collapse-item name="element-external-task">
-    <template #header>
-      <collapse-title :title="$t('panel.executionJob')">
-        <lucide-icon name="CalendarClock" />
-      </collapse-title>
-    </template>
-    <div class="element-external-task">
-      <edit-item v-if="tpVisible" :label="$t('panel.taskPriority')" :label-width="100">
-        <n-input v-model:value="taskPriority" maxlength="32" @change="setExternalTaskPriority" />
-      </edit-item>
-      <edit-item v-if="rtVisible" :label="$t('panel.retryTimeCycle')" :label-width="100">
-        <n-input v-model:value="retryTimeCycle" maxlength="32" @change="setRetryTimeCycle" />
-      </edit-item>
-    </div>
-  </n-collapse-item>
-</template>
-
-<script lang="ts">
-  import { computed, defineComponent, onMounted, ref, watch } from 'vue'
+<script setup lang="ts">
+  import { reactive, watch } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  import debounce from 'lodash.debounce'
+  import useElementUpdateListener from '@/hooks/useElementUpdateListener'
+  import catchUndefElement from '@/utils/CatchUndefElement'
   import modeler from '@/store/modeler'
   import {
     getExternalTaskValue,
@@ -27,63 +13,72 @@
     setRetryTimeCycleValue,
     taskPriorityVisible
   } from '@/bo-utils/jobExecutionUtil'
-  import { Element } from 'diagram-js/lib/model/Types'
-  import EventEmitter from '@/utils/EventEmitter'
+  import type { VxeFormPropTypes } from 'vxe-pc-ui'
 
-  export default defineComponent({
-    name: 'ElementJobExecution',
-    setup() {
-      const modelerStore = modeler()
-      const getActive = computed<Element | null>(() => modelerStore.getActive!)
-      const getActiveId = computed<string>(() => modelerStore.getActiveId!)
+  const { t } = useI18n()
 
-      const retryTimeCycle = ref<string | undefined>(undefined)
-      const rtVisible = ref<boolean>(false)
-      const getRetryTimeCycle = () => {
-        rtVisible.value = retryTimeCycleVisible(getActive.value!)
-        retryTimeCycle.value = getRetryTimeCycleValue(getActive.value!) || ''
-      }
-      const setRetryTimeCycle = (value: string | undefined) => {
-        setRetryTimeCycleValue(getActive.value!, value)
-      }
+  let scopedElement: BpmnElement | undefined
 
-      const taskPriority = ref<string | undefined>(undefined)
-      const tpVisible = ref<boolean>(false)
-      const getExternalTaskPriority = () => {
-        tpVisible.value = taskPriorityVisible(getActive.value!)
-        taskPriority.value = getExternalTaskValue(getActive.value!) || ''
-      }
-      const setExternalTaskPriority = (value: string | undefined) => {
-        setExternalTaskValue(getActive.value!, value)
-      }
-
-      watch(
-        () => getActiveId.value,
-        () => {
-          getRetryTimeCycle()
-          getExternalTaskPriority()
-        },
-        { immediate: true }
-      )
-
-      onMounted(() => {
-        getRetryTimeCycle()
-        getExternalTaskPriority()
-
-        EventEmitter.on('element-update', () => {
-          getRetryTimeCycle()
-          getExternalTaskPriority()
-        })
-      })
-
-      return {
-        retryTimeCycle,
-        rtVisible,
-        setRetryTimeCycle,
-        taskPriority,
-        tpVisible,
-        setExternalTaskPriority
-      }
-    }
+  const formData = reactive({
+    taskPriority: '',
+    retryTimeCycle: ''
   })
+
+  const tpVisible = reactive({ value: false })
+  const rtVisible = reactive({ value: false })
+
+  const reloadData = () =>
+    catchUndefElement((element) => {
+      scopedElement = element
+      tpVisible.value = taskPriorityVisible(element)
+      rtVisible.value = retryTimeCycleVisible(element)
+      formData.taskPriority = getExternalTaskValue(element) || ''
+      formData.retryTimeCycle = getRetryTimeCycleValue(element) || ''
+    })
+
+  useElementUpdateListener(reloadData)
+
+  const updateJob = debounce(() => {
+    if (!scopedElement) return
+    if (tpVisible.value && formData.taskPriority !== undefined) {
+      setExternalTaskValue(scopedElement, formData.taskPriority || undefined)
+    }
+    if (rtVisible.value && formData.retryTimeCycle !== undefined) {
+      setRetryTimeCycleValue(scopedElement, formData.retryTimeCycle || undefined)
+    }
+  }, 300)
+
+  watch(
+    () => ({ ...formData }),
+    () => updateJob(),
+    { deep: true }
+  )
+
+  const items: VxeFormPropTypes.Items = [
+    {
+      field: 'taskPriority',
+      title: t('panel.taskPriority'),
+      span: 24,
+      visible: tpVisible.value,
+      itemRender: { name: 'VxeInput' }
+    },
+    {
+      field: 'retryTimeCycle',
+      title: t('panel.retryTimeCycle'),
+      span: 24,
+      visible: rtVisible.value,
+      itemRender: { name: 'VxeInput' }
+    }
+  ]
 </script>
+
+<template>
+  <n-collapse-item name="element-external-task">
+    <template #header>
+      <collapse-title :title="$t('panel.executionJob')">
+        <lucide-icon name="CalendarClock" />
+      </collapse-title>
+    </template>
+    <vxe-form :data="formData" :items="items" title-width="100" />
+  </n-collapse-item>
+</template>

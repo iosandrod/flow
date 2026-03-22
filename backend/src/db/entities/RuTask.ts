@@ -54,6 +54,8 @@ export class RuTask {
     APPROVAL_USER_!: string;
     @Column({ name: 'CUSTOM_HEADERS_', type: 'varchar', length: 2000, nullable: true })
     CUSTOM_HEADERS_!: string;
+    @Column({ name: 'TASK_STATUS_', type: 'nvarchar', length: 32, nullable: true })
+    TASK_STATUS_!: string;
     
     getCustomHeaders(): Record<string, string> | null {
         if (!this.CUSTOM_HEADERS_) return null;

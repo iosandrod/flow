@@ -1,95 +1,78 @@
+<script setup lang="ts">
+  import { reactive, watch } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil'
+  import debounce from 'lodash.debounce'
+  import useElementUpdateListener from '@/hooks/useElementUpdateListener'
+  import catchUndefElement from '@/utils/CatchUndefElement'
+  import { addTaskDefinition } from '@/bo-utils/extensionPropertiesUtil'
+  import type { VxeFormPropTypes } from 'vxe-pc-ui'
+
+  const { t } = useI18n()
+
+  let scopedElement: BpmnElement | undefined
+
+  const formData = reactive({ type: '', retries: 3 })
+
+  const reloadData = () =>
+    catchUndefElement((element) => {
+      scopedElement = element
+      const bo = getBusinessObject(element)
+      if (!bo) {
+        formData.type = ''
+        formData.retries = 3
+        return
+      }
+      const ext = bo.extensionElements
+      if (!ext) {
+        formData.type = ''
+        formData.retries = 3
+        return
+      }
+      const taskDef = ext.values?.find((e: any) => e.$type === 'zeebe:TaskDefinition')
+      formData.type = taskDef?.type || ''
+      formData.retries = taskDef?.retries ?? 3
+    })
+
+  useElementUpdateListener(reloadData)
+
+  const updateTaskDef = debounce(() => {
+    if (!scopedElement) return
+    addTaskDefinition(scopedElement as any, { type: formData.type, retries: formData.retries })
+  }, 300)
+
+  watch(
+    () => ({ ...formData }),
+    () => updateTaskDef(),
+    { deep: true }
+  )
+
+  const items: VxeFormPropTypes.Items = [
+    {
+      field: 'type',
+      title: t('panel.taskDefinitionType'),
+      span: 24,
+      itemRender: { name: 'VxeInput' }
+    },
+    {
+      field: 'retries',
+      title: t('panel.taskDefinitionRetries'),
+      span: 24,
+      itemRender: {
+        name: 'VxeNumberInput',
+        props: { min: 0 }
+      }
+    }
+  ]
+</script>
+
 <template>
   <n-collapse-item name="element-task-definition">
     <template #header>
-      <span>Task Definition</span>
+      <collapse-title :title="$t('panel.taskDefinition')">
+        <lucide-icon name="FileCog" />
+      </collapse-title>
     </template>
-
-    <div v-if="isServiceTask">
-      <n-form :model="taskDefinition">
-        <n-form-item label="Type">
-          <n-input v-model:value="taskDefinition.type" />
-        </n-form-item>
-
-        <n-form-item label="Retries">
-          <n-input-number v-model:value="taskDefinition.retries" :min="0" />
-        </n-form-item>
-      </n-form>
-
-      <n-button type="primary" size="small" style="margin-top: 10px" @click="updateTaskDefinition">
-        Save
-      </n-button>
-    </div>
-
-    <div v-else style="color: #999"> Only available for ServiceTask </div>
+    <vxe-form :data="formData" :items="items" title-width="100" />
   </n-collapse-item>
 </template>
-
-<script lang="ts">
-  import { h, defineComponent, toRaw, markRaw } from 'vue'
-  import { mapState } from 'pinia'
-  import modelerStore from '@/store/modeler'
-  import { Element } from 'diagram-js/lib/model/Types'
-  import {
-    addExtensionProperty,
-    addTaskDefinition,
-    getExtensionProperties,
-    removeExtensionProperty
-  } from '@/bo-utils/extensionPropertiesUtil'
-
-  export default defineComponent({
-    name: 'ElementTaskDefinition',
-
-    data() {
-      return {
-        taskDefinition: {
-          type: '',
-          retries: 3
-        }
-      }
-    },
-
-    computed: {
-      ...mapState(modelerStore, ['getActive']),
-
-      isServiceTask(): boolean {
-        return this.getActive?.businessObject?.$type === 'bpmn:ServiceTask'
-      }
-    },
-
-    watch: {
-      getActive: {
-        immediate: true,
-        handler() {
-          this.loadTaskDefinition()
-        }
-      }
-    },
-
-    methods: {
-      loadTaskDefinition() {
-        if (!this.isServiceTask) return
-
-        const bo = this.getActive.businessObject
-        const ext = bo.extensionElements
-
-        if (!ext) {
-          this.taskDefinition = { type: '', retries: 3 }
-          return
-        }
-
-        const taskDef = ext.values?.find((e: any) => e.$type === 'zeebe:TaskDefinition')
-
-        if (taskDef) {
-          this.taskDefinition = {
-            type: taskDef.type || '',
-            retries: taskDef.retries || 3
-          }
-        }
-      },
-
-      updateTaskDefinition() {
-        addTaskDefinition(this.getActive as any, this.taskDefinition) //
-      }
-    }
-  })
-</script>

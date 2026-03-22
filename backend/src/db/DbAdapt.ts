@@ -8,7 +8,7 @@ import {
     HiTaskinst,
     RuExecution
 } from './entities';
-import { ProcessStatus } from '../types';
+import { ProcessStatus, TaskStatus } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface SqlLogEntry {
@@ -41,23 +41,27 @@ export class DbAdapt {
     }
 
     private inlineParam(sql: string, params: any[]): { sql: string, loggedParams: any[] } {
-        let paramIdx = 0;
-        const loggedParams: any[] = [];
-        const inlined = sql.replace(/@\d+/g, (match) => {
-            const val = params[paramIdx++];
-            loggedParams.push(val);
-            if (val === null || val === undefined) {
-                return 'NULL';
-            }
-            if (typeof val === 'number') {
-                return String(val);
-            }
-            if (typeof val === 'boolean') {
-                return val ? '1' : '0';
-            }
-            return `'${String(val).replace(/'/g, "''")}'`;
-        });
-        return { sql: inlined, loggedParams };
+        const re = /@(\d+)/g;
+        const matches: { pos: number; num: number }[] = [];
+        let m;
+        while ((m = re.exec(sql)) !== null) {
+            matches.push({ pos: m.index, num: parseInt(m[1]) });
+        }
+        matches.sort((a, b) => b.pos - a.pos);
+        let result = sql;
+        for (const { num } of matches) {
+            const placeholder = '@' + num;
+            const idx = result.lastIndexOf(placeholder);
+            if (idx === -1) continue;
+            const val = params[num - 1];
+            let fmt: string;
+            if (val === null || val === undefined) fmt = 'NULL';
+            else if (typeof val === 'number') fmt = String(val);
+            else if (typeof val === 'boolean') fmt = val ? '1' : '0';
+            else fmt = "'" + String(val).replace(/'/g, "''") + "'";
+            result = result.slice(0, idx) + fmt + result.slice(idx + placeholder.length);
+        }
+        return { sql: result, loggedParams: [...params] };
     }
 
     private async _execute(sql: string, params: any[] = [], operation: string = 'EXEC'): Promise<any[]> {
@@ -352,8 +356,9 @@ export class DbAdapt {
                 (ID_, REV_, EXECUTION_ID_, PROC_INST_ID_, PROC_DEF_ID_, PROC_DEF_KEY_,
                  TASK_DEF_ID_, TASK_DEF_KEY_, NAME_, PARENT_TASK_ID_, DESCRIPTION_, OWNER_,
                  ASSIGNEE_, START_TIME_, END_TIME_, DURATION_, PRIORITY_, DUE_DATE_, CATEGORY_,
-                 SUSPENSION_STATE_, TENANT_ID_, FORM_KEY_, TASK_KEY_, APPROVAL_ID_, APPROVAL_USER_, CUSTOM_HEADERS_)
-            VALUES (@1, 1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, GETDATE(), NULL, 0, @13, @14, @15, 1, @16, @17, @18, @19, @20, @21)
+                 SUSPENSION_STATE_, TENANT_ID_, FORM_KEY_, TASK_KEY_, APPROVAL_ID_, APPROVAL_USER_,
+                 CUSTOM_HEADERS_, TASK_STATUS_)
+            VALUES (@1, 1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, GETDATE(), NULL, 0, @13, @14, @15, 1, @16, @17, @18, @19, @20, @21, @22)
         `, [
             id,
             data.EXECUTION_ID_,
@@ -375,30 +380,26 @@ export class DbAdapt {
             data.TASK_KEY_,
             data.DESCRIPTION_ || null,
             approvalUser,
-            customHeadersJson
+            customHeadersJson,
+            TaskStatus.PENDING
         ]);
         const rows = await this.query(`SELECT * FROM ACT_RU_TASK WHERE ID_ = @1`, [id]);
         return this.rowToEntity(rows[0], RuTask);
     }
 
-    async completeTask(id: string, data?: Partial<RuTask>): Promise<RuTask | null> {
+    async completeTask(id: string, status: string = TaskStatus.DONE): Promise<RuTask | null> {
         await this.execute(`
             UPDATE ACT_RU_TASK
-            SET END_TIME_ = GETDATE(), DURATION_ = 0, REV_ = REV_ + 1
+            SET END_TIME_ = GETDATE(), DURATION_ = 0, REV_ = REV_ + 1, TASK_STATUS_ = @2
             WHERE ID_ = @1
-        `, [id]);
+        `, [id, status]);
+        return this.getTask(id);
+    }
 
-        if (data) {
-            const entries = Object.entries(data).filter(([k, v]) => v !== undefined && k !== 'ID_' && k !== 'REV_');
-            if (entries.length > 0) {
-                const sets = entries.map(([, ], i) => `${entries[i][0]} = @${i + 2}`).join(', ');
-                const vals = entries.map(([, v]) => v);
-                await this.execute(
-                    `UPDATE ACT_RU_TASK SET ${sets} WHERE ID_ = @1`,
-                    [id, ...vals]
-                );
-            }
-        }
+    async updateTaskStatus(id: string, status: string): Promise<RuTask | null> {
+        await this.execute(`
+            UPDATE ACT_RU_TASK SET TASK_STATUS_ = @2, REV_ = REV_ + 1 WHERE ID_ = @1
+        `, [id, status]);
         return this.getTask(id);
     }
 
@@ -410,57 +411,55 @@ export class DbAdapt {
     async getPendingTasks(procInstId?: string): Promise<RuTask[]> {
         if (procInstId) {
             const rows = await this.query(
-                `SELECT * FROM ACT_RU_TASK WHERE END_TIME_ IS NULL AND PROC_INST_ID_ = @1 ORDER BY START_TIME_ DESC`,
-                [procInstId]
+                `SELECT * FROM ACT_RU_TASK WHERE TASK_STATUS_ IN (@1, @2) AND PROC_INST_ID_ = @3 ORDER BY START_TIME_ DESC`,
+                [TaskStatus.PENDING, TaskStatus.ACTIVE, procInstId]
             );
             return this.rowsToEntities(rows, RuTask);
         }
         const rows = await this.query(
-            `SELECT * FROM ACT_RU_TASK WHERE END_TIME_ IS NULL ORDER BY START_TIME_ DESC`
+            `SELECT * FROM ACT_RU_TASK WHERE TASK_STATUS_ IN (@1, @2) ORDER BY START_TIME_ DESC`,
+            [TaskStatus.PENDING, TaskStatus.ACTIVE]
         );
         return this.rowsToEntities(rows, RuTask);
     }
 
     async checkTaskExists(procInstId: string, taskDefKey: string): Promise<boolean> {
         const rows = await this.query(
-            `SELECT 1 FROM ACT_RU_TASK WHERE PROC_INST_ID_ = @1 AND TASK_DEF_KEY_ = @2 AND END_TIME_ IS NULL`,
-            [procInstId, taskDefKey]
+            `SELECT 1 FROM ACT_RU_TASK WHERE PROC_INST_ID_ = @1 AND TASK_DEF_KEY_ = @2 AND TASK_STATUS_ IN (@3, @4)`,
+            [procInstId, taskDefKey, TaskStatus.PENDING, TaskStatus.ACTIVE]
         );
         return rows.length > 0;
     }
 
     async checkTaskExistsByJobKey(jobKey: string): Promise<boolean> {
         const rows = await this.query(
-            `SELECT 1 FROM ACT_RU_TASK WHERE TASK_KEY_ = @1 AND END_TIME_ IS NULL`,
-            [jobKey]
+            `SELECT 1 FROM ACT_RU_TASK WHERE TASK_KEY_ = @1 AND TASK_STATUS_ IN (@2, @3)`,
+            [jobKey, TaskStatus.PENDING, TaskStatus.ACTIVE]
         );
         return rows.length > 0;
     }
 
     async getUserTasks(userName?: string): Promise<RuTask[]> {
-        console.log('[getUserTasks] userName:', userName);
         let rows: any[];
         if (userName && userName.trim()) {
             const name = userName.trim();
-            console.log('[getUserTasks] Filtering by user:', name);
             rows = await this.query(
-                `SELECT * FROM ACT_RU_TASK WHERE END_TIME_ IS NULL AND (APPROVAL_USER_ = @1 OR ASSIGNEE_ = @1) ORDER BY START_TIME_ DESC`,
-                [name]
+                `SELECT * FROM ACT_RU_TASK WHERE TASK_STATUS_ IN (@1, @2) AND (APPROVAL_USER_ = @3 OR ASSIGNEE_ = @3) ORDER BY START_TIME_ DESC`,
+                [TaskStatus.PENDING, TaskStatus.ACTIVE, name]
             );
-            console.log('[getUserTasks] Found', rows.length, 'tasks');
         } else {
-            console.log('[getUserTasks] No userName, returning all pending tasks');
             rows = await this.query(
-                `SELECT * FROM ACT_RU_TASK WHERE END_TIME_ IS NULL ORDER BY START_TIME_ DESC`
+                `SELECT * FROM ACT_RU_TASK WHERE TASK_STATUS_ IN (@1, @2) ORDER BY START_TIME_ DESC`,
+                [TaskStatus.PENDING, TaskStatus.ACTIVE]
             );
-            console.log('[getUserTasks] Found', rows.length, 'tasks (no filter)');
         }
         return this.rowsToEntities(rows, RuTask);
     }
 
     async getAllPendingTasks(): Promise<RuTask[]> {
         const rows = await this.query(
-            `SELECT * FROM ACT_RU_TASK WHERE END_TIME_ IS NULL ORDER BY START_TIME_ DESC`
+            `SELECT * FROM ACT_RU_TASK WHERE TASK_STATUS_ IN (@1, @2) ORDER BY START_TIME_ DESC`,
+            [TaskStatus.PENDING, TaskStatus.ACTIVE]
         );
         return this.rowsToEntities(rows, RuTask);
     }

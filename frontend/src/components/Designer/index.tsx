@@ -41,6 +41,23 @@ const Designer = defineComponent({
       { deep: true, immediate: true }
     )
 
+    watch(
+      () => props.xml,
+      async (newXml) => {
+        if (newXml) {
+          const store = modelerStore()
+          const modeler = store.getModeler
+          if (modeler) {
+            try {
+              await modeler.importXML(newXml)
+            } catch (e) {
+              console.error('Failed to load XML:', e)
+            }
+          }
+        }
+      }
+    )
+
     return () => <div ref={designer} class="designer"></div>
   }
 })

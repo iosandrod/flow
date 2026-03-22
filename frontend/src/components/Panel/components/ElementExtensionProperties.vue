@@ -1,3 +1,84 @@
+<script setup lang="ts">
+  import { markRaw, nextTick, reactive, ref } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  import debounce from 'lodash.debounce'
+  import useElementUpdateListener from '@/hooks/useElementUpdateListener'
+  import catchUndefElement from '@/utils/CatchUndefElement'
+  import {
+    addExtensionProperty,
+    getExtensionProperties,
+    removeExtensionProperty
+  } from '@/bo-utils/extensionPropertiesUtil'
+  import type { VxeGridPropTypes, VxeFormPropTypes } from 'vxe-pc-ui'
+
+  const { t } = useI18n()
+
+  let scopedElement: BpmnElement | undefined
+  let extensionsRaw: any[] = []
+
+  const extensions = ref<any[]>([])
+  const modalVisible = ref(false)
+
+  const formData = reactive({ name: '', value: '' })
+
+  const reloadData = () =>
+    catchUndefElement((element) => {
+      scopedElement = element
+      extensionsRaw = markRaw(getExtensionProperties(element))
+      extensions.value = extensionsRaw.map((item: any) => ({ ...item }))
+    })
+
+  useElementUpdateListener(reloadData)
+
+  const removeProperty = (index: number) => {
+    if (!scopedElement) return
+    removeExtensionProperty(scopedElement, extensionsRaw[index])
+    reloadData()
+  }
+
+  const saveProperty = debounce(() => {
+    if (!scopedElement) return
+    addExtensionProperty(scopedElement, { name: formData.name, value: formData.value })
+    formData.name = ''
+    formData.value = ''
+    modalVisible.value = false
+    reloadData()
+  }, 300)
+
+  const openModal = async () => {
+    formData.name = ''
+    formData.value = ''
+    modalVisible.value = true
+    await nextTick()
+  }
+
+  const columns: VxeGridPropTypes.Columns = [
+    { type: 'seq', width: 50 },
+    { field: 'name', title: t('panel.propertyName'), showOverflow: true },
+    { field: 'value', title: t('panel.propertyValue'), showOverflow: true },
+    {
+      title: t('panel.operations'),
+      width: 80,
+      slots: { default: 'operations_default' }
+    }
+  ]
+
+  const formItems: VxeFormPropTypes.Items = [
+    {
+      field: 'name',
+      title: t('panel.propertyName'),
+      span: 24,
+      itemRender: { name: 'VxeInput' }
+    },
+    {
+      field: 'value',
+      title: t('panel.propertyValue'),
+      span: 24,
+      itemRender: { name: 'VxeInput' }
+    }
+  ]
+</script>
+
 <template>
   <n-collapse-item name="element-extension-properties">
     <template #header>
@@ -10,149 +91,38 @@
         {{ extensions.length }}
       </n-tag>
     </template>
-    <div class="element-extension-properties">
-      <n-data-table size="small" max-height="20vh" :columns="columns" :data="extensions" />
 
-      <n-button type="info" class="inline-large-button" secondary @click="openPropertyModel">
-        <lucide-icon :size="20" name="Plus" />
-        <span>{{ $t('panel.addExtensionProperties') }}</span>
-      </n-button>
-    </div>
+    <vxe-grid
+      :data="extensions"
+      :columns="columns"
+      :max-height="200"
+      :show-overflow="true"
+      size="small"
+    >
+      <template #operations_default="{ $rowIndex }">
+        <n-button quaternary size="small" type="error" @click="removeProperty($rowIndex)">
+          {{ $t('panel.remove') }}
+        </n-button>
+      </template>
+    </vxe-grid>
+
+    <n-button type="info" class="inline-large-button" secondary @click="openModal">
+      <lucide-icon :size="20" name="Plus" />
+      <span>{{ $t('panel.addExtensionProperties') }}</span>
+    </n-button>
 
     <n-modal
-      v-model:show="modelVisible"
+      v-model:show="modalVisible"
       preset="dialog"
       :title="$t('panel.addExtensionProperties')"
       :style="{ width: '640px' }"
     >
-      <n-form ref="formRef" :model="newProperty" :rules="rules" aria-modal="true">
-        <n-form-item path="name" :label="$t('panel.propertyName')">
-          <n-input v-model:value="newProperty.name" @keydown.enter.prevent />
-        </n-form-item>
-        <n-form-item path="value" :label="$t('panel.propertyValue')">
-          <n-input v-model:value="newProperty.value" @keydown.enter.prevent />
-        </n-form-item>
-      </n-form>
+      <vxe-form :data="formData" :items="formItems" title-width="120" />
       <template #action>
-        <n-button size="small" type="info" @click="addProperty">{{ $t('panel.confirm') }}</n-button>
+        <n-button size="small" type="info" @click="saveProperty">{{
+          $t('panel.confirm')
+        }}</n-button>
       </template>
     </n-modal>
   </n-collapse-item>
 </template>
-
-<script lang="ts">
-  import { h, defineComponent, toRaw, markRaw } from 'vue'
-  import { mapState } from 'pinia'
-  import modelerStore from '@/store/modeler'
-  import { Element } from 'diagram-js/lib/model/Types'
-  import {
-    addExtensionProperty,
-    getExtensionProperties,
-    removeExtensionProperty
-  } from '@/bo-utils/extensionPropertiesUtil'
-
-  import { FormInst, NButton } from 'naive-ui'
-  import EventEmitter from '@/utils/EventEmitter'
-
-  export default defineComponent({
-    name: 'ElementExtensionProperties',
-    data() {
-      return {
-        extensions: [],
-        extensionsRaw: [],
-        newProperty: { name: '', value: '' },
-        rules: {
-          name: { required: true, message: '属性名称不能为空', trigger: ['blur', 'change'] },
-          value: { required: true, message: '属性值不能为空', trigger: ['blur', 'change'] }
-        },
-        modelVisible: false
-      }
-    },
-    computed: {
-      ...mapState(modelerStore, ['getActive', 'getActiveId']),
-      columns() {
-        return [
-          {
-            title: this.$t('panel.index'),
-            key: 'index',
-            render: (a, index) => index + 1,
-            width: 60
-          },
-          {
-            title: 'Name',
-            key: 'name',
-            ellipsis: {
-              tooltip: true
-            }
-          },
-          {
-            title: 'Value',
-            key: 'value',
-            ellipsis: {
-              tooltip: true
-            }
-          },
-          {
-            title: this.$t('panel.operations'),
-            key: 'operation',
-            width: 80,
-            align: 'center',
-            render: (row, index) =>
-              h(
-                NButton,
-                {
-                  quaternary: true,
-                  size: 'small',
-                  type: 'error',
-                  onClick: () => this.removeProperty(index)
-                },
-                {
-                  default: () => this.$t('panel.remove')
-                }
-              )
-          }
-        ]
-      }
-    },
-    watch: {
-      getActiveId: {
-        immediate: true,
-        handler() {
-          this.reloadExtensionProperties()
-        }
-      }
-    },
-    mounted() {
-      this.reloadExtensionProperties()
-      EventEmitter.on('element-update', this.reloadExtensionProperties)
-    },
-    methods: {
-      async reloadExtensionProperties() {
-        this.modelVisible = false
-        await this.$nextTick()
-        this.newProperty = { name: '', value: '' }
-        ;(this.extensionsRaw as any[]) = markRaw(getExtensionProperties(this.getActive as Element))
-        this.extensions = JSON.parse(JSON.stringify(this.extensionsRaw))
-      },
-      removeProperty(propIndex: number) {
-        removeExtensionProperty(this.getActive as Element, this.extensionsRaw[propIndex])
-        this.reloadExtensionProperties()
-      },
-      async addProperty() {
-        ;(this.$refs.formRef as FormInst).validate((errors) => {
-          if (!errors) {
-            addExtensionProperty(this.getActive as Element, toRaw(this.newProperty))
-            this.reloadExtensionProperties()
-          }
-        })
-      },
-      async openPropertyModel() {
-        this.modelVisible = true
-        await this.$nextTick()
-        ;(this.$refs.formRef as FormInst).restoreValidation()
-      }
-    }
-  })
-</script>
-
-<style scoped></style>

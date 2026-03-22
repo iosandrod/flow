@@ -10,8 +10,9 @@ export enum ProcessStatus {
 
 export enum TaskStatus {
     PENDING = 'P',
-    COMPLETED = 'C',
-    CANCELLED = 'X'
+    ACTIVE = 'A',
+    DONE = 'D',
+    REJECTED = 'R'
 }
 
 export interface WorkflowRequest {

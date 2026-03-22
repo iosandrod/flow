@@ -146,6 +146,10 @@ async function initializeApp() {
                 IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ACT_RU_TASK') AND name = 'CUSTOM_HEADERS_')
                 ALTER TABLE ACT_RU_TASK ADD CUSTOM_HEADERS_ VARCHAR(2000) NULL
             `);
+            await AppDataSource.query(`
+                IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('ACT_RU_TASK') AND name = 'TASK_STATUS_')
+                ALTER TABLE ACT_RU_TASK ADD TASK_STATUS_ NVARCHAR(32) NULL
+            `);
             console.log('Database columns checked/added');
         } catch (err) {
             console.log('Error adding columns (may already exist):', err);
@@ -205,10 +209,9 @@ async function initializeApp() {
         }
 
         const dbAdapt = new DbAdapt(AppDataSource);
-        
-        // Worker 在 startWorkflow 时动态创建，不再在启动时初始化
-        // 只需要设置数据库适配器
         workerManager.setDbAdapt(dbAdapt);
+
+        await initializeWorkers(dbAdapt);
 
         const flowManager = new FlowManager(dbAdapt);
         const strategyManager = new StrategyManager(flowManager, dbAdapt);

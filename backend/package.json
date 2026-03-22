@@ -9,6 +9,7 @@
     "build:watch": "tsc --watch",
     "start": "node dist/app.js",
     "dev": "ts-node src/app.ts",
+    "kill":"Get-NetTCPConnection -LocalPort 3000 | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }",
     "debug": "node --inspect=9229 -r ts-node/register src/app.ts",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run build"

@@ -1,3 +1,205 @@
+<script setup lang="ts">
+  import { reactive, watch } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  import debounce from 'lodash.debounce'
+  import useElementUpdateListener from '@/hooks/useElementUpdateListener'
+  import catchUndefElement from '@/utils/CatchUndefElement'
+  import * as CU from '@/bo-utils/conditionUtil'
+  import type { VxeFormPropTypes } from 'vxe-pc-ui'
+
+  const { t } = useI18n()
+
+  let scopedElement: BpmnElement | undefined
+
+  const formData = reactive({
+    variableName: '',
+    variableEvents: '',
+    conditionType: '',
+    expression: '',
+    language: '',
+    scriptType: '',
+    body: '',
+    resource: ''
+  })
+
+  const varVisible = reactive({ value: false })
+  const varEventVisible = reactive({ value: false })
+  const conditionTypeOptions = reactive<Record<string, string>[]>([])
+  const scriptTypeOptions = reactive<Record<string, string>[]>([
+    { label: '外链脚本( External Resource )', value: 'external' },
+    { label: '内联脚本( Inline Script )', value: 'inline' },
+    { label: '无( None )', value: 'none' }
+  ])
+
+  const reloadData = () =>
+    catchUndefElement((element) => {
+      scopedElement = element
+
+      varVisible.value = CU.isConditionEventDefinition(element)
+      if (varVisible.value) {
+        varEventVisible.value = !CU.isExtendStartEvent(element)
+        formData.variableName = CU.getVariableNameValue(element) || ''
+        formData.variableEvents = CU.getVariableEventsValue(element) || ''
+      }
+
+      conditionTypeOptions.length = 0
+      conditionTypeOptions.push(...CU.getConditionTypeOptions(element))
+
+      formData.conditionType = CU.getConditionTypeValue(element) || ''
+      formData.expression = CU.getConditionExpressionValue(element) || ''
+      formData.language = CU.getConditionScriptLanguageValue(element) || ''
+      formData.scriptType = CU.getConditionScriptTypeValue(element) || ''
+      formData.body = CU.getConditionScriptBodyValue(element) || ''
+      formData.resource = CU.getConditionScriptResourceValue(element) || ''
+    })
+
+  useElementUpdateListener(reloadData)
+
+  const updateVariableName = debounce(() => {
+    if (!scopedElement) return
+    CU.setVariableNameValue(scopedElement, formData.variableName || undefined)
+  }, 300)
+
+  const updateVariableEvents = debounce(() => {
+    if (!scopedElement) return
+    CU.setVariableEventsValue(scopedElement, formData.variableEvents || undefined)
+  }, 300)
+
+  const updateConditionType = debounce(() => {
+    if (!scopedElement) return
+    CU.setConditionTypeValue(scopedElement, formData.conditionType)
+  }, 300)
+
+  const updateExpression = debounce(() => {
+    if (!scopedElement) return
+    CU.setConditionExpressionValue(scopedElement, formData.expression || undefined)
+  }, 300)
+
+  const updateLanguage = debounce(() => {
+    if (!scopedElement) return
+    CU.setConditionScriptLanguageValue(scopedElement, formData.language || undefined)
+  }, 300)
+
+  const updateScriptType = debounce(() => {
+    if (!scopedElement) return
+    CU.setConditionScriptTypeValue(scopedElement, formData.scriptType || undefined)
+  }, 300)
+
+  const updateBody = debounce(() => {
+    if (!scopedElement) return
+    CU.setConditionScriptBodyValue(scopedElement, formData.body || undefined)
+  }, 300)
+
+  const updateResource = debounce(() => {
+    if (!scopedElement) return
+    CU.setConditionScriptResourceValue(scopedElement, formData.resource || undefined)
+  }, 300)
+
+  watch(
+    () => formData.variableName,
+    () => updateVariableName()
+  )
+  watch(
+    () => formData.variableEvents,
+    () => updateVariableEvents()
+  )
+  watch(
+    () => formData.conditionType,
+    () => updateConditionType()
+  )
+  watch(
+    () => formData.expression,
+    () => updateExpression()
+  )
+  watch(
+    () => formData.language,
+    () => updateLanguage()
+  )
+  watch(
+    () => formData.scriptType,
+    () => updateScriptType()
+  )
+  watch(
+    () => formData.body,
+    () => updateBody()
+  )
+  watch(
+    () => formData.resource,
+    () => updateResource()
+  )
+
+  const items: VxeFormPropTypes.Items = [
+    {
+      field: 'variableName',
+      title: t('panel.variableName'),
+      span: 24,
+      folding: true,
+      itemRender: { name: 'VxeInput' },
+      visible: varVisible.value
+    },
+    {
+      field: 'variableEvents',
+      title: t('panel.variableEvents'),
+      span: 24,
+      folding: true,
+      itemRender: { name: 'VxeInput' },
+      visible: varEventVisible.value
+    },
+    {
+      field: 'conditionType',
+      title: t('panel.conditionType'),
+      span: 24,
+      itemRender: {
+        name: 'VxeSelect',
+        options: conditionTypeOptions
+      }
+    },
+    {
+      field: 'expression',
+      title: t('panel.conditionExpression'),
+      span: 24,
+      folding: true,
+      itemRender: { name: 'VxeInput' },
+      visibleMethod: ({ data }) => data.conditionType === 'expression'
+    },
+    {
+      field: 'language',
+      title: t('panel.scriptLanguage'),
+      span: 24,
+      folding: true,
+      itemRender: { name: 'VxeInput' },
+      visibleMethod: ({ data }) => data.conditionType === 'script'
+    },
+    {
+      field: 'scriptType',
+      title: t('panel.scriptType'),
+      span: 24,
+      folding: true,
+      itemRender: {
+        name: 'VxeSelect',
+        options: scriptTypeOptions
+      },
+      visibleMethod: ({ data }) => data.conditionType === 'script'
+    },
+    {
+      field: 'body',
+      title: t('panel.scriptBody'),
+      span: 24,
+      folding: true,
+      itemRender: { name: 'VxeTextarea' },
+      visibleMethod: ({ data }) => data.conditionType === 'script' && data.scriptType === 'inline'
+    },
+    {
+      field: 'resource',
+      title: t('panel.scriptResource'),
+      span: 24,
+      folding: true,
+      itemRender: { name: 'VxeInput' },
+      visibleMethod: ({ data }) => data.conditionType === 'script' && data.scriptType === 'external'
+    }
+  ]
+</script>
+
 <template>
   <n-collapse-item name="element-conditional">
     <template #header>
@@ -5,171 +207,6 @@
         <lucide-icon name="ArrowLeftRight" />
       </collapse-title>
     </template>
-    <div class="element-conditional">
-      <template v-if="varVisible">
-        <edit-item key="variableName" :label="$t('panel.variableName')" :label-width="120">
-          <n-input v-model:value="variableName" maxlength="32" @change="setElementVariableName" />
-        </edit-item>
-        <edit-item
-          v-if="varEventVisible"
-          key="variableEvent"
-          :label="$t('panel.variableEvents')"
-          :label-width="120"
-        >
-          <n-input v-model:value="variableEvents" @change="setElementVariableEvents" />
-        </edit-item>
-      </template>
-      <edit-item key="condition" :label="$t('panel.conditionType')" :label-width="120">
-        <n-select
-          v-model:value="conditionData.conditionType"
-          :options="conditionTypeOptions"
-          @update:value="setElementConditionType"
-        />
-      </edit-item>
-      <edit-item
-        v-if="conditionData.conditionType && conditionData.conditionType === 'expression'"
-        key="expression"
-        :label="$t('panel.conditionExpression')"
-        :label-width="120"
-      >
-        <n-input v-model:value="conditionData.expression" @change="setConditionExpression" />
-      </edit-item>
-      <template v-if="conditionData.conditionType && conditionData.conditionType === 'script'">
-        <edit-item key="scriptType" :label="$t('panel.scriptType')" :label-width="120">
-          <n-select
-            v-model:value="conditionData.scriptType"
-            :options="scriptTypeOptions"
-            @update:value="setElementConditionScriptType"
-          />
-        </edit-item>
-        <edit-item key="scriptLanguage" :label="$t('panel.scriptLanguage')" :label-width="120">
-          <n-input v-model:value="conditionData.language" @change="setConditionScriptLanguage" />
-        </edit-item>
-        <edit-item
-          v-show="conditionData.scriptType === 'inline'"
-          key="scriptBody"
-          :label="$t('panel.scriptBody')"
-          :label-width="120"
-        >
-          <n-input
-            v-model:value="conditionData.body"
-            type="textarea"
-            @change="setConditionScriptBody"
-          />
-        </edit-item>
-        <edit-item
-          v-show="conditionData.scriptType === 'external'"
-          key="scriptResource"
-          :label="$t('panel.scriptResource')"
-          :label-width="120"
-        >
-          <n-input v-model:value="conditionData.resource" @change="setConditionScriptResource" />
-        </edit-item>
-      </template>
-    </div>
+    <vxe-form :data="formData" :items="items" title-width="120" />
   </n-collapse-item>
 </template>
-
-<script lang="ts">
-  import { computed, defineComponent, onMounted, ref } from 'vue'
-  import modeler from '@/store/modeler'
-  import { Element } from 'diagram-js/lib/model/Types'
-  import { scriptTypeOptions } from '@/config/selectOptions'
-  import * as CU from '@/bo-utils/conditionUtil'
-  import EventEmitter from '@/utils/EventEmitter'
-
-  export default defineComponent({
-    name: 'ElementConditional',
-    setup() {
-      const modelerStore = modeler()
-      const getActive = computed<Element | null>(() => modelerStore.getActive!)
-
-      // 变量配置部分
-      const varVisible = ref<boolean>(false)
-      const variableName = ref<string | undefined>(undefined)
-      const varEventVisible = ref<boolean>(false)
-      const variableEvents = ref<string | undefined>(undefined)
-      const getElementVariables = () => {
-        varVisible.value = CU.isConditionEventDefinition(getActive.value!)
-        variableName.value = CU.getVariableNameValue(getActive.value!)
-        if (varVisible.value) {
-          varEventVisible.value = !CU.isExtendStartEvent(getActive.value!)
-          variableEvents.value = CU.getVariableEventsValue(getActive.value!)
-        }
-      }
-      const setElementVariableName = (value: string | undefined) => {
-        CU.setVariableNameValue(getActive.value!, value)
-      }
-      const setElementVariableEvents = (value: string | undefined) => {
-        CU.setVariableEventsValue(getActive.value!, value)
-      }
-
-      // 条件类型配置部分
-      const conditionTypeOptions = ref<Record<string, string>[]>([])
-      const conditionData = ref<ConditionalForm>({})
-      const getElementConditionType = () => {
-        conditionData.value.conditionType = CU.getConditionTypeValue(getActive.value!)
-        conditionData.value.conditionType === 'expression' && getConditionExpression()
-        conditionData.value.conditionType === 'script' && getConditionScript()
-      }
-      const setElementConditionType = (value: string) => {
-        CU.setConditionTypeValue(getActive.value!, value)
-      }
-
-      const getConditionExpression = () => {
-        conditionData.value.expression = CU.getConditionExpressionValue(getActive.value!)
-      }
-      const setConditionExpression = (value: string | undefined) => {
-        CU.setConditionExpressionValue(getActive.value!, value)
-      }
-
-      const getConditionScript = () => {
-        conditionData.value.language = CU.getConditionScriptLanguageValue(getActive.value!)
-        conditionData.value.scriptType = CU.getConditionScriptTypeValue(getActive.value!)
-        conditionData.value.body = CU.getConditionScriptBodyValue(getActive.value!)
-        conditionData.value.resource = CU.getConditionScriptResourceValue(getActive.value!)
-      }
-      const setConditionScriptLanguage = (value: string | undefined) => {
-        CU.setConditionScriptLanguageValue(getActive.value!, value)
-      }
-      const setElementConditionScriptType = (value: string | undefined) => {
-        CU.setConditionScriptTypeValue(getActive.value!, value)
-      }
-      const setConditionScriptBody = (value: string | undefined) => {
-        CU.setConditionScriptBodyValue(getActive.value!, value)
-      }
-      const setConditionScriptResource = (value: string | undefined) => {
-        CU.setConditionScriptResourceValue(getActive.value!, value)
-      }
-
-      onMounted(() => {
-        getElementVariables()
-        getElementConditionType()
-        conditionTypeOptions.value = CU.getConditionTypeOptions(getActive.value!)
-        EventEmitter.on('element-update', () => {
-          conditionTypeOptions.value = CU.getConditionTypeOptions(getActive.value!)
-          getElementVariables()
-          getElementConditionType()
-        })
-      })
-
-      return {
-        varVisible,
-        varEventVisible,
-        variableName,
-        variableEvents,
-        setElementVariableName,
-        setElementVariableEvents,
-        conditionTypeOptions,
-        conditionData,
-        scriptTypeOptions,
-        setElementConditionType,
-        setConditionExpression,
-        setConditionScriptLanguage,
-        setElementConditionScriptType,
-        setConditionScriptBody,
-        setConditionScriptResource
-      }
-    }
-  })
-</script>

@@ -1,3 +1,48 @@
+<script setup lang="ts">
+  import { reactive, watch } from 'vue'
+  import { useI18n } from 'vue-i18n'
+  import debounce from 'lodash.debounce'
+  import useElementUpdateListener from '@/hooks/useElementUpdateListener'
+  import catchUndefElement from '@/utils/CatchUndefElement'
+  import { getDocumentValue, setDocumentValue } from '@/bo-utils/documentationUtil'
+  import type { VxeFormPropTypes } from 'vxe-pc-ui'
+
+  const { t } = useI18n()
+
+  let scopedElement: BpmnElement | undefined
+
+  const formData = reactive({ documentation: '' })
+
+  const reloadData = () =>
+    catchUndefElement((element) => {
+      scopedElement = element
+      formData.documentation = getDocumentValue(element) || ''
+    })
+
+  useElementUpdateListener(reloadData)
+
+  const updateDoc = debounce(() => {
+    if (!scopedElement) return
+    setDocumentValue(scopedElement, formData.documentation || undefined)
+  }, 300)
+
+  watch(
+    () => formData.documentation,
+    () => updateDoc()
+  )
+
+  const items: VxeFormPropTypes.Items = [
+    {
+      field: 'documentation',
+      title: t('panel.documentationBody'),
+      span: 24,
+      itemRender: {
+        name: 'VxeTextarea'
+      }
+    }
+  ]
+</script>
+
 <template>
   <n-collapse-item name="element-documentations">
     <template #header>
@@ -5,48 +50,6 @@
         <lucide-icon name="FileText" />
       </collapse-title>
     </template>
-    <edit-item :label="$t('panel.documentationBody')" :label-width="120">
-      <n-input v-model:value="elementDoc" type="textarea" @change="updateElementDoc" />
-    </edit-item>
+    <vxe-form :data="formData" :items="items" title-width="120" />
   </n-collapse-item>
 </template>
-
-<script lang="ts">
-  import { defineComponent } from 'vue'
-  import { mapState } from 'pinia'
-  import modelerStore from '@/store/modeler'
-  import { Element } from 'diagram-js/lib/model/Types'
-  import { getDocumentValue, setDocumentValue } from '@/bo-utils/documentationUtil'
-  import EventEmitter from '@/utils/EventEmitter'
-
-  export default defineComponent({
-    name: 'ElementDocumentations',
-    data() {
-      return {
-        elementDoc: ''
-      }
-    },
-    computed: {
-      ...mapState(modelerStore, ['getActive', 'getActiveId'])
-    },
-    watch: {
-      getActiveId: {
-        immediate: true,
-        handler() {
-          this.elementDoc = getDocumentValue(this.getActive as Element) || ''
-        }
-      }
-    },
-    mounted() {
-      this.elementDoc = getDocumentValue(this.getActive as Element) || ''
-      EventEmitter.on('element-update', () => {
-        this.elementDoc = getDocumentValue(this.getActive as Element) || ''
-      })
-    },
-    methods: {
-      updateElementDoc(value) {
-        setDocumentValue(this.getActive as Element, value)
-      }
-    }
-  })
-</script>
